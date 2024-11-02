@@ -62,4 +62,11 @@ export class User {
             throw new Error('Role must be either admin, lecturer or student');
         }
     }
+
+    equals(user: User): boolean {
+        return this.username === user.getUsername() &&
+            this.email === user.getEmail() &&
+            this.password === user.getPassword() &&
+            this.role === user.getRole();
+    }
 }
