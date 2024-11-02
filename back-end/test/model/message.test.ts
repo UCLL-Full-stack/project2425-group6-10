@@ -5,7 +5,7 @@ test('given valid values, when creating a new message, then message is created',
         content: 'Hi how are you?',
     });
     const now = new Date();
-    const expectedDate = `${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')}/${now.getFullYear()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    const expectedDate = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
 
     expect(message.getContent()).toBe('Hi how are you?');
     expect(message.getDate()).toBe(expectedDate)
