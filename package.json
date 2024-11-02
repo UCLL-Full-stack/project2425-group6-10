@@ -1,5 +1,9 @@
 {
   "devDependencies": {
+    "@types/nanoid": "^2.1.0",
     "@types/node": "^22.8.6"
+  },
+  "dependencies": {
+    "nanoid": "^5.0.8"
   }
 }
