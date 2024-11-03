@@ -12,7 +12,7 @@ const UserOverviewTable: React.FC<Props> = ({ users }) => {
                     <tr>
                         <th className="users-header-cell">Name</th>
                         <th className="users-header-cell">Email</th>
-                        <th className="users-header-cell">Password</th>
+                        <th className="users-header-cell">Role</th>
                     </tr>
                 </thead>
                 <tbody>
