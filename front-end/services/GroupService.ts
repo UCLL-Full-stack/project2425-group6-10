@@ -14,9 +14,18 @@ const getUsersByGroup = async (code: string) => {
     })
 }
 
+const addUserToGroup = async (code: string, userId: number) => {
+    return await fetch(process.env.NEXT_PUBLIC_API_URL + '/groups/' + code + '/users/' + userId, {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json'}
+    })
+}
+
 const LecturerService = {
     getAllGroups,
     getUsersByGroup,
+    addUserToGroup,
 }
 
 export default LecturerService;
