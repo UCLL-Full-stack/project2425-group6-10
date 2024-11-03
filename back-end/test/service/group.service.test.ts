@@ -4,9 +4,9 @@ import groupDb from "../../repository/group.db";
 import groupService from "../../service/group.service";
 
 const groups = [
-    new Group({ id: 1, name: 'Toegepaste Informatica', description: 'Group for TI students' }),
-    new Group({ id: 2, name: 'Marketing', description: 'Group for marketing students' }),
-    new Group({ id: 3, name: 'General', description: 'Group for general questions' })
+    new Group({ id: 1, name: 'Toegepaste Informatica', description: 'Group for TI students', users: [] }),
+    new Group({ id: 2, name: 'Marketing', description: 'Group for marketing students', users: [] }),
+    new Group({ id: 3, name: 'General', description: 'Group for general questions', users: [] })
 ]
 
 let mockGroupDbGetAllGroups: jest.Mock;

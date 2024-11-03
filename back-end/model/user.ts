@@ -1,4 +1,5 @@
 import { Role } from '../types';
+import { Group } from './group';
 
 export class User {
     private id?: number;
@@ -6,6 +7,7 @@ export class User {
     private email: string;
     private password: string;
     private role: Role;
+    private groups: Group[]
 
     constructor(user: {
         id?: number;
@@ -13,6 +15,7 @@ export class User {
         email: string;
         password: string;
         role: Role;
+        groups: Group[]
     }) {
         this.validate(user);
         this.id = user.id;
@@ -20,6 +23,7 @@ export class User {
         this.email = user.email;
         this.password = user.password;
         this.role = user.role;
+        this.groups = user.groups || [];
     }
 
     getId(): number | undefined {
@@ -42,6 +46,14 @@ export class User {
         return this.role;
     }
 
+    getGroups(): Group[] {
+        return this.groups;
+    }    
+
+    addGroupToUser(group: Group) {
+        this.groups.push(group);
+    }
+
     validate(user: { id?: number; username: string; email: string; password: string; role: Role }) {
         if (!user.username?.trim()) {
             throw new Error('Username is required');
@@ -61,6 +73,7 @@ export class User {
         if (user.role !== 'admin' && user.role !== 'student' && user.role !== 'lecturer') {
             throw new Error('Role must be either admin, lecturer or student');
         }
+        
     }
 
     equals(user: User): boolean {
@@ -68,5 +81,6 @@ export class User {
             this.email === user.getEmail() &&
             this.password === user.getPassword() &&
             this.role === user.getRole();
+            this.groups === user.getGroups();
     }
 }

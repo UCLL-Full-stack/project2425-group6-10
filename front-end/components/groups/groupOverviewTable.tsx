@@ -1,10 +1,11 @@
-import { Group } from "@/types"
+import { Group } from "@/types";
 
 type Props = {
-    groups: Array<Group>
-}
+    groups: Array<Group>;
+    onRowClick: (groupCode: string) => void; // Add a prop for row click handler
+};
 
-const GroupOverviewTable: React.FC<Props> = ({ groups }) => {
+const GroupOverviewTable: React.FC<Props> = ({ groups, onRowClick }) => {
     return (
         <>
             <table className="groups-table"> 
@@ -17,7 +18,11 @@ const GroupOverviewTable: React.FC<Props> = ({ groups }) => {
                 </thead>
                 <tbody>
                     {groups.map((group, index) => (
-                        <tr key={index} className="group-table-row">
+                        <tr 
+                            key={index} 
+                            className="group-table-row" 
+                            onClick={() => onRowClick(group.code)} // Add onClick handler here
+                        >
                             <td className="group-cell">{group.name}</td>
                             <td className="group-cell">{group.description}</td>
                             <td className="group-cell">{group.code}</td>
@@ -26,7 +31,7 @@ const GroupOverviewTable: React.FC<Props> = ({ groups }) => {
                 </tbody>
             </table>
         </>
-    )
-}
+    );
+};
 
 export default GroupOverviewTable;

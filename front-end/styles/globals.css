@@ -71,3 +71,41 @@ h1 {
   padding: 1rem; 
   border: 1px solid #ccc; 
 }
+
+.users-table {
+  width: 100%; 
+  border-collapse: collapse; 
+  margin: 2rem 0; 
+}
+
+.users-table-header {
+  background-color: #0070f3; 
+  color: #fff;
+}
+
+.users-header-cell {
+  padding: 1rem; 
+  text-align: left; 
+  font-weight: bold;
+}
+
+.user-table-row {
+  background-color: #f9f9f9; 
+  transition: background-color 0.3s; 
+}
+
+.user-table-row:hover {
+  background-color: #e0f7fa; 
+}
+
+.users-cell {
+  padding: 1rem; 
+  border: 1px solid #ccc; 
+}
+
+.missing-users-message {
+  color: #ff0000; /* Change to your desired color */
+  font-size: 18px; /* Set font size */
+  text-align: center; /* Center the message */
+  margin-top: 2rem; /* Add some spacing above the message */
+}

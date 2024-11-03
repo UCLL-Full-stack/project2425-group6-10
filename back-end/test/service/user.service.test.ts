@@ -4,8 +4,8 @@ import userDb from "../../repository/user.db";
 import userService from "../../service/user.service";
 
 const users = [
-    new User({ username: 'johnDoe', email: 'john.doe@gmail.com', password: 'John1234', role: 'student' }),
-    new User({ username: 'janeDoe', email: 'jane.doe@gmail.com', password: 'Jane1234', role: 'lecturer' })
+    new User({ username: 'johnDoe', email: 'john.doe@gmail.com', password: 'John1234', role: 'student', groups: [] }),
+    new User({ username: 'janeDoe', email: 'jane.doe@gmail.com', password: 'Jane1234', role: 'lecturer', groups: [] }),
 ]
 
 let mockUserDbGetAllUsers: jest.Mock;
