@@ -1,12 +1,11 @@
+import { Report as ReportPrisma } from '@prisma/client';
+
 export class Report {
     private id?: number;
     private description: string;
     private date: string;
 
-    constructor(report: {
-        id?: number;
-        description: string;
-    }) {
+    constructor(report: { id?: number; description: string }) {
         this.validate(report);
         this.id = report.id;
         this.description = report.description;
@@ -25,7 +24,7 @@ export class Report {
         return this.date;
     }
 
-    validate(report: { id?: number; description: string; }) {
+    validate(report: { id?: number; description: string }) {
         if (!report.description?.trim()) {
             throw new Error('Description is required');
         }
@@ -37,7 +36,14 @@ export class Report {
         const year = date.getFullYear();
         const hours = String(date.getHours()).padStart(2, '0');
         const minutes = String(date.getMinutes()).padStart(2, '0');
-        
+
         return `${day}/${month}/${year} ${hours}:${minutes}`;
+    }
+
+    static from({ id, description }: ReportPrisma) {
+        return new Report({
+            id,
+            description,
+        });
     }
 }

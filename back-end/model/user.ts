@@ -1,13 +1,15 @@
+import { group } from 'console';
 import { Role } from '../types';
+import { User as UserPrisma, Group as GroupPrisma } from '@prisma/client';
 import { Group } from './group';
 
 export class User {
-    private id?: number;
-    private username: string;
-    private email: string;
-    private password: string;
-    private role: Role;
-    private groups: Group[]
+    readonly id?: number;
+    readonly username: string;
+    readonly email: string;
+    readonly password: string;
+    readonly role: Role;
+    readonly groups: Group[];
 
     constructor(user: {
         id?: number;
@@ -15,7 +17,7 @@ export class User {
         email: string;
         password: string;
         role: Role;
-        groups: Group[]
+        groups: Group[];
     }) {
         this.validate(user);
         this.id = user.id;
@@ -23,7 +25,7 @@ export class User {
         this.email = user.email;
         this.password = user.password;
         this.role = user.role;
-        this.groups = user.groups || [];
+        this.groups = user.groups;
     }
 
     getId(): number | undefined {
@@ -46,14 +48,6 @@ export class User {
         return this.role;
     }
 
-    getGroups(): Group[] {
-        return this.groups;
-    }    
-
-    addGroupToUser(group: Group) {
-        this.groups.push(group);
-    }
-
     validate(user: { id?: number; username: string; email: string; password: string; role: Role }) {
         if (!user.username?.trim()) {
             throw new Error('Username is required');
@@ -73,14 +67,31 @@ export class User {
         if (user.role !== 'admin' && user.role !== 'student' && user.role !== 'lecturer') {
             throw new Error('Role must be either admin, lecturer or student');
         }
-        
     }
 
     equals(user: User): boolean {
-        return this.username === user.getUsername() &&
+        return (
+            this.username === user.getUsername() &&
             this.email === user.getEmail() &&
             this.password === user.getPassword() &&
-            this.role === user.getRole();
-            this.groups === user.getGroups();
+            this.role === user.getRole()
+        );
+    }
+    static from({
+        id,
+        username,
+        password,
+        email,
+        role,
+        groups,
+    }: UserPrisma & { groups: GroupPrisma[] }) {
+        return new User({
+            id,
+            username,
+            password,
+            email,
+            role: role as Role,
+            groups: groups.map((group) => Group.from(group)),
+        });
     }
 }

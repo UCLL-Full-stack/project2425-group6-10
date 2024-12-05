@@ -1,11 +1,10 @@
-import { Group } from "../../model/group";
+import { Group } from '../../model/group';
 
 test('given: valid values, when: creating a new group, then: group is created', () => {
     const group = new Group({
         id: 1,
         name: 'Group 1',
         description: 'Group 1 description',
-        users: []
     });
 
     expect(group.getId()).toBe(1);
@@ -20,7 +19,6 @@ test('given: empty name, when: creating a new group, then: an error is thrown', 
             id: 1,
             name: '',
             description: 'Group 1 description',
-            users: []
         });
     };
 
@@ -33,7 +31,6 @@ test('given: only spaces in name, when: creating a new group, then: an error is 
             id: 1,
             name: '       ',
             description: 'Group 1 description',
-            users: []
         });
     };
 
@@ -46,7 +43,6 @@ test('given: empty description, when: creating a new group, then: an error is th
             id: 1,
             name: 'Group 1',
             description: '',
-            users: []
         });
     };
 
@@ -59,7 +55,6 @@ test('given: only spaces in description, when: creating a new group, then: an er
             id: 1,
             name: 'Group 1',
             description: '       ',
-            users: []
         });
     };
 

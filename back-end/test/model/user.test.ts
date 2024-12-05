@@ -6,7 +6,6 @@ test('given: user with valid values, when: creating a new user, then: user is cr
         email: 'john.doe@gmail.com',
         password: 'John1234',
         role: 'student',
-        groups: []
     });
 
     expect(user.getUsername()).toBe('JohnDoe');
@@ -22,7 +21,6 @@ test('given: user with empty username, when: creating a new user, then: an error
             email: 'john.doe@gmail.com',
             password: 'John1234',
             role: 'student',
-            groups: []
         });
     };
 
@@ -36,9 +34,8 @@ test('given: user with only spaces in username, when: creating a new user, then:
             email: 'john.doe@gmail.com',
             password: 'John1234',
             role: 'student',
-            groups: []
         });
-    }
+    };
 
     expect(user).toThrow('Username is required');
 });
@@ -50,7 +47,6 @@ test('given: user with empty email, when: creating a new user, then: an error is
             email: '',
             password: 'John1234',
             role: 'student',
-            groups: []
         });
     };
 
@@ -64,7 +60,6 @@ test('given: user with only spaces in email, when: creating a new user, then: an
             email: '       ',
             password: 'John1234',
             role: 'student',
-            groups: []
         });
     };
 
@@ -78,7 +73,6 @@ test('given: user with invalid email, when: creating a new user, then: an error 
             email: 'john.doe.gmail.com',
             password: 'John1234',
             role: 'student',
-            groups: []
         });
     };
 
@@ -92,7 +86,6 @@ test('given: user with empty password, when: creating a new user, then: an error
             email: 'john.doe@gmail.com',
             password: '',
             role: 'student',
-            groups: []
         });
     };
 
@@ -106,7 +99,6 @@ test('given: user with only spaces in password, when: creating a new user, then:
             email: 'john.doe@gmail.com',
             password: '      ',
             role: 'student',
-            groups: []
         });
     };
 
@@ -120,7 +112,6 @@ test('given: user with password less than 8 characters, when: creating a new use
             email: 'john.doe@gmail.com',
             password: 'john123',
             role: 'student',
-            groups: []
         });
     };
 
@@ -134,7 +125,6 @@ test('given: user with empty role, when: creating a new user, then: an error is 
             email: 'john.doe@gmail.com',
             password: 'john1234',
             role: '' as any,
-            groups: []
         });
     };
 
@@ -148,13 +138,11 @@ test('given: user with only spaces role, when: creating a new user, then: an err
             email: 'john.doe@gmail.com',
             password: 'john1234',
             role: '     ' as any,
-            groups: []
         });
     };
 
     expect(user).toThrow('Role must be either admin, lecturer or student');
 });
-
 
 test('given: user with invalid role, when: creating a new user, then: an error is thrown', () => {
     const user = () => {
@@ -163,7 +151,6 @@ test('given: user with invalid role, when: creating a new user, then: an error i
             email: 'john.doe@gmail.com',
             password: 'john1234',
             role: 'guest' as any,
-            groups: []
         });
     };
 

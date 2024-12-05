@@ -1,12 +1,10 @@
+import { Message as MessagePrisma } from '@prisma/client';
 export class Message {
     private id?: number;
     private content: string;
     private date: string;
 
-    constructor(message: {
-        id?: number;
-        content: string;
-    }) {
+    constructor(message: { id?: number; content: string }) {
         this.validate(message);
         this.id = message.id;
         this.content = message.content;
@@ -25,7 +23,7 @@ export class Message {
         return this.date;
     }
 
-    validate(message: { id?: number; content: string; }) {
+    validate(message: { id?: number; content: string }) {
         if (!message.content?.trim()) {
             throw new Error('Content is required');
         }
@@ -37,7 +35,14 @@ export class Message {
         const year = date.getFullYear();
         const hours = String(date.getHours()).padStart(2, '0');
         const minutes = String(date.getMinutes()).padStart(2, '0');
-        
+
         return `${day}/${month}/${year} ${hours}:${minutes}`;
+    }
+
+    static from({ id, content }: MessagePrisma) {
+        return new Message({
+            id,
+            content,
+        });
     }
 }

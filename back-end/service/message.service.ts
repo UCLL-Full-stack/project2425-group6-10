@@ -1,7 +1,7 @@
-import { Message } from "../model/message";
-import messageDb from "../repository/message.db";
+import { Message } from '../model/message';
+import messageDb from '../repository/message.db';
 
-const getAllMessages = (): Message[] => messageDb.getAllMessages();
+const getAllMessages = async (): Promise<Message[]> => await messageDb.getAllMessages();
 
 export default {
     getAllMessages,

@@ -1,20 +1,49 @@
-import { User } from "../model/user";
+import { User } from '../model/user';
+import database from '../util/database';
 
-const users = [
-    new User({ id: 1, username: 'johnDoe', email: 'john.doe@gmail.com', password: 'John1234', role: 'student', groups: [] }),
-    new User({ id: 2, username: 'janeDoe', email: 'jane.doe@gmail.com', password: 'Jane1234', role: 'lecturer', groups: [] }),
-    new User({ id: 3, username: 'jimDoe', email: 'jim.doe@gmail.com', password: 'Jim12345', role: 'admin', groups: [] }),
-]
+const getAllUsers = async (): Promise<User[]> => {
+    try {
+        const usersPrisma = await database.user.findMany({ include: { groups: true } });
+        return usersPrisma.map((userPrisma) => User.from(userPrisma));
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
 
-const getAllUsers = (): User[] => {
-    return users;
-}
+const getUserById = async (id: number): Promise<User | null> => {
+    try {
+        const userPrisma = await database.user.findUnique({
+            where: { id },
+            include: { groups: true },
+        });
+        return userPrisma ? User.from(userPrisma) : null;
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
 
-const getUserById = (id: number): User | undefined => {
-    return users.find(user => user.getId() === id);
-}
+const addGroupToUser = async (userId: number, groupId: number): Promise<User> => {
+    try {
+        const userPrisma = await database.user.update({
+            data: {
+                groups: {
+                    connect: { id: groupId },
+                },
+            },
+            where: { id: userId },
+            include: { groups: true },
+        });
+        return User.from(userPrisma);
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
 
 export default {
     getAllUsers,
     getUserById,
-}
+    addGroupToUser,
+};

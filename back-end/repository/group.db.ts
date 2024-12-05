@@ -1,42 +1,47 @@
-import exp from "constants";
-import { Group } from "../model/group";
-import userDb from "./user.db";
-import { User } from "../model/user";
+import exp from 'constants';
+import { Group } from '../model/group';
+import userDb from './user.db';
+import { User } from '../model/user';
+import database from '../util/database';
+import { te, tr } from 'date-fns/locale';
 
-const groups = [
-    new Group({ id: 1, name: 'Toegepaste Informatica', description: 'Group for TI students', users: [] }),
-    new Group({ id: 2, name: 'Marketing', description: 'Group for marketing students', users: [] }),
-    new Group({ id: 3, name: 'General', description: 'Group for general questions', users: [] }),
-]
-
-const getAllGroups = (): Group[] => {
-    return groups;
-}
-
-const addUserToGroup = (code: string, userId: number): Group => {
-    const group = groups.find(group => group.getCode() === code);
-    if (!group) {
-        throw new Error('Group not found');
+const getAllGroups = async (): Promise<Group[]> => {
+    try {
+        const groupsPrisma = await database.group.findMany({
+            include: {
+                users: true,
+            },
+        });
+        return groupsPrisma.map((groupPrisma) => Group.from(groupPrisma));
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
     }
-    const user = userDb.getUserById(userId);
-    if (!user) {
-        throw new Error('User not found');
-    }
-    group.addUserToGroup(user);
-    user.addGroupToUser(group);
-    return group;
-}
+};
 
-const getUsersByGroup = (code: string): User[] => {
-    const group = groups.find(group => group.getCode() === code);
-    if (!group) {
-        throw new Error('Group not found');
+const getGroupById = async (groupId: number): Promise<Group | null> => {
+    try {
+        const groupPrisma = await database.group.findUnique({
+            where: { id: groupId },
+            include: {
+                users: {
+                    select: {
+                        id: true,
+                        username: true,
+                        email: true,
+                        role: true,
+                    },
+                },
+            },
+        });
+        return groupPrisma ? Group.from(groupPrisma) : null;
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
     }
-    return group.getUsers();
-}
+};
 
 export default {
     getAllGroups,
-    addUserToGroup,
-    getUsersByGroup,
-}
+    getGroupById,
+};

@@ -1,25 +1,19 @@
 import { v4 as uuidv4 } from 'uuid';
+import { Group as groupsPrisma } from '@prisma/client';
 import { User } from './user';
 
 export class Group {
-    private id?: number;
-    private name: string;
-    private description: string;
-    private code: string;
-    private users: User[];
+    readonly id?: number;
+    readonly name: string;
+    readonly description: string;
+    readonly code: string;
 
-    constructor(group: { 
-        id: number; 
-        name: string; 
-        description: string; 
-        users: User[];
-    }) {
+    constructor(group: { id: number; name: string; description: string; code?: string }) {
         this.validate(group);
         this.id = group.id;
         this.name = group.name;
         this.description = group.description;
-        this.code = this.generateCode();
-        this.users = group.users || [];
+        this.code = group.code || this.generateCode();
     }
 
     getId(): number | undefined {
@@ -38,21 +32,7 @@ export class Group {
         return this.code;
     }
 
-    getUsers(): User[] {
-        return this.users;
-    }
-
-    addUserToGroup(user: User): void {
-        if (this.users.includes(user)) {
-            throw new Error('User is already in the group');
-        }
-        if (!user){
-            throw new Error('User is required');
-        }
-        this.users.push(user);
-    }
-
-    validate(group: { id: number; name: string; description: string; }) {
+    validate(group: { id: number; name: string; description: string }) {
         if (!group.name?.trim()) {
             throw new Error('Name is required');
         }
@@ -61,11 +41,20 @@ export class Group {
         }
     }
 
-    private generateCode(): string {
+    generateCode(): string {
         return uuidv4().substring(0, 6);
     }
 
     equals(group: Group): boolean {
         return this.name === group.getName() && this.description === group.getDescription();
+    }
+
+    static from({ id, name, description, code }: groupsPrisma) {
+        return new Group({
+            id,
+            name,
+            description,
+            code,
+        });
     }
 }

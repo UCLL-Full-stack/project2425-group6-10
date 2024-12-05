@@ -1,24 +1,34 @@
-import { be } from "date-fns/locale";
-import { Group } from "../../model/group";
-import groupDb from "../../repository/group.db";
-import groupService from "../../service/group.service";
-import { User } from "../../model/user";
+import { be } from 'date-fns/locale';
+import { Group } from '../../model/group';
+import groupDb from '../../repository/group.db';
+import groupService from '../../service/group.service';
+import { User } from '../../model/user';
 
 const groups = [
-    new Group({ id: 1, name: 'Toegepaste Informatica', description: 'Group for TI students', users: [] }),
+    new Group({
+        id: 1,
+        name: 'Toegepaste Informatica',
+        description: 'Group for TI students',
+        users: [],
+    }),
     new Group({ id: 2, name: 'Marketing', description: 'Group for marketing students', users: [] }),
-    new Group({ id: 3, name: 'General', description: 'Group for general questions', users: [] })
-]
+    new Group({ id: 3, name: 'General', description: 'Group for general questions', users: [] }),
+];
 
-const user = new  User({ id:1, username: 'johnDoe', email: 'john.doe@gmail.com', password: 'John1234', role: 'student', groups: [] });
-
+const user = new User({
+    id: 1,
+    username: 'johnDoe',
+    email: 'john.doe@gmail.com',
+    password: 'John1234',
+    role: 'student',
+    groups: [],
+});
 
 let mockGroupDbGetAllGroups: jest.Mock;
 let mockUserDbAddUserToGroup: jest.Mock;
 
-
 beforeEach(() => {
-    mockGroupDbGetAllGroups = jest.fn();    
+    mockGroupDbGetAllGroups = jest.fn();
     mockUserDbAddUserToGroup = jest.fn();
 });
 
@@ -37,10 +47,10 @@ test('given: list of groups, when getAllGroups, then: list of groups is returned
 
 test('given: user, when add user to group, then: user is added to group', () => {
     const mockedGroup = new Group({
-        id: 1, 
-        name: 'Toegepaste Informatica', 
-        description: 'Group for TI students', 
-        users: [user]
+        id: 1,
+        name: 'Toegepaste Informatica',
+        description: 'Group for TI students',
+        users: [user],
     });
     mockUserDbAddUserToGroup.mockReturnValue(mockedGroup);
     groupDb.addUserToGroup = mockUserDbAddUserToGroup;
@@ -62,4 +72,3 @@ test('given: user, when add user to group, then: user is added to group', () => 
         ],
     });
 });
-

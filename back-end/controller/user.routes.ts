@@ -61,4 +61,18 @@ userRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
     }
 });
 
+userRouter.put(
+    '/:userId/groups/:groupId',
+    async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const userId = parseInt(req.params.userId);
+            const groupId = parseInt(req.params.groupId);
+            const user = await userService.addGroupToUser(userId, groupId);
+            res.status(200).json(user);
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
 export { userRouter };

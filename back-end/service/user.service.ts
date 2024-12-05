@@ -1,39 +1,42 @@
-import { User } from "../model/user";
-import userDb from "../repository/user.db";
-import { UserInput, UserDTO } from "../types"; // Import your DTOs
+import { User } from '../model/user';
+import groupDb from '../repository/group.db';
+import userDb from '../repository/user.db';
 
-const getAllUsers = (): UserDTO[] => {
+const getAllUsers = (): Promise<User[]> => {
     const users = userDb.getAllUsers();
-    return users.map(user => ({
-        id: user.getId()!,
-        username: user.getUsername(),
-        email: user.getEmail(),
-        role: user.getRole(),
-        groups: user.getGroups().map(group => ({
-            id: group.getId()!,
-            name: group.getName(),
-        })),
-    }));
-}
+    return users;
+};
 
-const getUserById = (id: number): UserDTO | undefined => {
+const getUserById = (id: number): Promise<User | null> => {
     const user = userDb.getUserById(id);
     if (!user) {
-        return undefined;
+        throw new Error(`User with id ${id} not found`);
     }
-    return {
-        id: user.getId()!,
-        username: user.getUsername(),
-        email: user.getEmail(),
-        role: user.getRole(),
-        groups: user.getGroups().map(group => ({
-            id: group.getId()!,
-            name: group.getName(),
-        })),
-    };
-}
+    return user;
+};
+
+const addGroupToUser = (userId: number, groupId: number): Promise<User> => {
+    if (!userId || !groupId) {
+        throw new Error('Userid is required');
+    }
+    if (!groupId) {
+        throw new Error('Groupid is required');
+    }
+
+    if (!userDb.getUserById(userId)) {
+        throw new Error(`User with id ${userId} not found`);
+    }
+
+    if (!groupDb.getGroupById(groupId)) {
+        throw new Error(`Group with id ${groupId} not found`);
+    }
+
+    const user = userDb.addGroupToUser(userId, groupId);
+    return user;
+};
 
 export default {
     getAllUsers,
     getUserById,
-}
+    addGroupToUser,
+};

@@ -1,16 +1,17 @@
-import { get } from "http";
-import { Message } from "../model/message";
+import { get } from 'http';
+import { Message } from '../model/message';
+import database from '../util/database';
 
-const messages = [
-    new Message({ content: 'Hi how are you?' }),
-    new Message({ content: 'I am good, thank you!' }),
-    new Message({ content: 'Welcome in our group!' }),
-]
-
-const getAllMessages = (): Message[] => {
-    return messages;
-}
+const getAllMessages = async (): Promise<Message[]> => {
+    try {
+        const messagesPrisma = await database.message.findMany();
+        return messagesPrisma.map((messagePrisma) => Message.from(messagePrisma));
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
 
 export default {
     getAllMessages,
-}
+};
