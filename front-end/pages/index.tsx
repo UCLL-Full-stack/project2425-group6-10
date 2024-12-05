@@ -2,7 +2,6 @@ import Head from "next/head";
 import Image from "next/image";
 import Header from "@/components/header";
 
-
 export default function Home() {
   return (
     <>
@@ -13,12 +12,18 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Header/>
+        <Header />
         <h1>CampusChat</h1>
         <div className="image-container">
-        <Image className='HomeLogo'src='/logo.jpg' width={300} height={300} alt='Campus Chat Logo' />
+          <Image
+            className="HomeLogo"
+            src="/logo.jpg"
+            width={300}
+            height={300}
+            alt="Campus Chat Logo"
+          />
         </div>
-        </main>
+      </main>
     </>
   );
 }

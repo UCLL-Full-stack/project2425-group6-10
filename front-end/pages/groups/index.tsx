@@ -1,19 +1,17 @@
-import Header from "@/components/header";
-import GroupService from "@/services/GroupService";
-import { Group } from "@/types";
-import Head from "next/head";
 import GroupOverviewTable from "@/components/groups/groupOverviewTable";
-import { useEffect, useState } from "react";
-import { User } from "@/types";
+import Header from "@/components/header";
 import UserOverviewTable from "@/components/users/UserOverviewTable";
+import GroupService from "@/services/GroupService";
+import UserService from "@/services/UserService";
+import { Group, User } from "@/types";
+import Head from "next/head";
+import { useEffect, useState } from "react";
 
 const Groups: React.FC = () => {
   const [groups, setGroups] = useState<Array<Group>>([]);
   const [users, setUsers] = useState<Array<User>>([]);
   const [groupClicked, setGroupClicked] = useState<boolean>(false);
-  const [groupCode, setGroupCode] = useState<string>("");
-  const [userId, setUserId] = useState<number | string>("");
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [groupId, setGroupId] = useState<number | null>(null);
 
   const getGroups = async () => {
     const response = await GroupService.getAllGroups();
@@ -21,40 +19,16 @@ const Groups: React.FC = () => {
     setGroups(json);
   };
 
-  const getUsersByGroup = async (code: string) => {
-    const response = await GroupService.getUsersByGroup(code);
+  const getUsersByGroup = async (id: number) => {
+    const response = await UserService.getUsersByGroup(id);
     const json = await response.json();
     setUsers(json);
     setGroupClicked(true);
   };
 
-  const handleRowClick = (groupCode: string) => {
-    getUsersByGroup(groupCode);
-  };
-
-  const addUser = async () => {
-    setErrorMessage(""); // Reset the error message before each attempt
-    if (groupCode && userId) {
-      try {
-        const response = await GroupService.addUserToGroup(
-          groupCode,
-          Number(userId)
-        );
-
-        if (response.ok) {
-          alert("User added to group successfully!");
-          getUsersByGroup(groupCode);
-        } else {
-          const errorData = await response.json();
-          setErrorMessage(errorData.message || "An error occurred.");
-        }
-      } catch (error) {
-        console.error("Error adding user to group:", error);
-        setErrorMessage("An unexpected error occurred.");
-      }
-    } else {
-      setErrorMessage("Please provide both group code and user ID.");
-    }
+  const handleRowClick = (id: number) => {
+    setGroupId(id);
+    getUsersByGroup(id);
   };
 
   useEffect(() => {
@@ -72,27 +46,6 @@ const Groups: React.FC = () => {
       </Head>
       <main>
         <Header />
-        <div className="add-user-container">
-          <input
-            type="text"
-            className="input-group-code"
-            placeholder="Group Code"
-            value={groupCode}
-            onChange={(e) => setGroupCode(e.target.value)}
-          />
-          <input
-            type="number"
-            className="input-user-id"
-            placeholder="User ID"
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-          />
-          <button className="button-add-user" onClick={addUser}>
-            Add User
-          </button>
-        </div>
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
-
         <h1>Groups:</h1>
         {groups && (
           <GroupOverviewTable groups={groups} onRowClick={handleRowClick} />
@@ -100,7 +53,7 @@ const Groups: React.FC = () => {
 
         {groupClicked && (
           <>
-            <h1>Users:</h1>
+            <h1>Users for Group {groupId}:</h1> {}
             {users.length > 0 ? (
               <UserOverviewTable users={users} />
             ) : (
