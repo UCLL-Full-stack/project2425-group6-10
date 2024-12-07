@@ -35,8 +35,13 @@ const addGroupToUser = (userId: number, groupId: number): Promise<User> => {
     return user;
 };
 
+const getUsersByGroupId = (groupId: number): Promise<User[]> => {
+    const users = userDb.getUsersByGroupId(groupId);
+    return users;
+};
 export default {
     getAllUsers,
     getUserById,
     addGroupToUser,
+    getUsersByGroupId,
 };

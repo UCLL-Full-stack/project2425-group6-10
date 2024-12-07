@@ -41,9 +41,30 @@ const addGroupToUser = async (userId: number, groupId: number): Promise<User> =>
         throw new Error('Database error. See server log for details.');
     }
 };
+const getUsersByGroupId = async (groupId: number): Promise<User[]> => {
+    try {
+        const usersPrisma = await database.user.findMany({
+            where: {
+                groups: {
+                    some: {
+                        id: groupId,
+                    },
+                },
+            },
+            include: {
+                groups: true,
+            },
+        });
+        return usersPrisma.map((userPrisma) => User.from(userPrisma));
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
 
 export default {
     getAllUsers,
     getUserById,
     addGroupToUser,
+    getUsersByGroupId,
 };

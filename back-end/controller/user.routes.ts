@@ -75,4 +75,18 @@ userRouter.put(
     }
 );
 
+userRouter.get('/group/:groupId', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const groupId = parseInt(req.params.groupId, 10);
+        if (isNaN(groupId)) {
+            return res.status(400).json({ error: 'Invalid groupId provided' });
+        }
+
+        const users = await userService.getUsersByGroupId(groupId);
+        res.status(200).json(users);
+    } catch (error) {
+        next(error);
+    }
+});
+
 export { userRouter };
