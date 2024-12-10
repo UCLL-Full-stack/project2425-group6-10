@@ -31,6 +31,8 @@ const reportRouter = express.Router();
  * @swagger
  * /reports:
  *  get:
+ *      security:
+ *          - bearerAuth: []
  *      summary: Get all reports
  *      responses:
  *          200:

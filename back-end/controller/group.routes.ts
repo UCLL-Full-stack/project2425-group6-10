@@ -35,6 +35,8 @@ const groupRouter = express.Router();
  * @swagger
  * /groups:
  *  get:
+ *      security:
+ *        - bearerAuth: []
  *      summary: Get all groups
  *      responses:
  *          200:

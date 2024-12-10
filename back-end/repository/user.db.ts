@@ -62,9 +62,56 @@ const getUsersByGroupId = async (groupId: number): Promise<User[]> => {
     }
 };
 
+const createUser = async ({ username, password, email, role }: User): Promise<User> => {
+    try {
+        const userPrisma = await database.user.create({
+            data: {
+                username,
+                password,
+                email,
+                role,
+            },
+            include: { groups: true },
+        });
+        return User.from(userPrisma);
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
+
+const getUserbyUsername = async (username: string): Promise<User | null> => {
+    try {
+        const userPrisma = await database.user.findFirst({
+            where: { username },
+            include: { groups: true },
+        });
+        return userPrisma ? User.from(userPrisma) : null;
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
+
+const getUserbyEmail = async (email: string): Promise<User | null> => {
+    try {
+        const userPrisma = await database.user.findFirst({
+            where: { email },
+            include: { groups: true },
+        });
+        return userPrisma ? User.from(userPrisma) : null;
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
+
 export default {
     getAllUsers,
     getUserById,
     addGroupToUser,
     getUsersByGroupId,
+    createUser,
+    getUserbyUsername,
+    getUserbyEmail,
 };

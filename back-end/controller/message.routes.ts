@@ -31,6 +31,8 @@ const messageRouter = express.Router();
  * @swagger
  * /messages:
  *  get:
+ *      security:
+ *         - bearerAuth: []
  *      summary: Get all messages
  *      responses:
  *          200:

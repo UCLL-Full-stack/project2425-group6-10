@@ -31,9 +31,15 @@
  *         role:
  *           type: string
  *           description: Role of the user ( admin, lecturer or student)
+ *         groups:
+ *          type: array
+ *         items:
+ *         $ref: '#/components/schemas/Group'
  */
 import express, { NextFunction, Request, Response } from 'express';
 import userService from '../service/user.service';
+import { User } from '@prisma/client';
+import { UserInput } from '../types';
 
 const userRouter = express.Router();
 
@@ -41,6 +47,8 @@ const userRouter = express.Router();
  * @swagger
  * /users:
  *  get:
+ *      security:
+ *      - bearerAuth: []
  *      summary: Get all users
  *      responses:
  *          200:
@@ -61,6 +69,28 @@ userRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
     }
 });
 
+/**
+ * @swagger
+ * /users/{userId}:
+ *  get:
+ *      security:
+ *      - bearerAuth: []
+ *      summary: Get user by id
+ *      parameters:
+ *          - in: path
+ *            name: userId
+ *            required: true
+ *            description: Id of the user
+ *            schema:
+ *              type: integer
+ *      responses:
+ *          200:
+ *              description: A user object
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/User'
+ */
 userRouter.put(
     '/:userId/groups/:groupId',
     async (req: Request, res: Response, next: NextFunction) => {
@@ -75,6 +105,30 @@ userRouter.put(
     }
 );
 
+/**
+ * @swagger
+ * /users/group/{groupId}:
+ *  get:
+ *      security:
+ *       - bearerAuth: []
+ *      summary: Get users by group id
+ *      parameters:
+ *          - in: path
+ *            name: groupId
+ *            required: true
+ *            description: Id of the group
+ *            schema:
+ *              type: integer
+ *      responses:
+ *          200:
+ *              description: A list of users
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: '#/components/schemas/User'
+ */
 userRouter.get('/group/:groupId', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const groupId = parseInt(req.params.groupId, 10);
@@ -89,4 +143,79 @@ userRouter.get('/group/:groupId', async (req: Request, res: Response, next: Next
     }
 });
 
+/**
+ * @swagger
+ * /users/signup:
+ *  post:
+ *      security:
+ *          - bearerAuth: []
+ *      summary: Create a new user
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/User'
+ *      responses:
+ *          201:
+ *              description: A user object
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/User'
+ */
+userRouter.post('/signup', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const UserInput = <UserInput>req.body;
+        const user = await userService.createUser(UserInput);
+        return res.status(201).json(user);
+    } catch (error) {
+        next(error);
+    }
+});
+
+/**
+ * @swagger
+ * /users/login:
+ *  post:
+ *      security:
+ *        - bearerAuth: []
+ *      summary: Authenticate user
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          username:
+ *                              type: string
+ *                          password:
+ *                              type: string
+ *      responses:
+ *          200:
+ *              description: A user object
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              message:
+ *                                  type: string
+ *                              token:
+ *                                  type: string
+ *                              username:
+ *                                  type: string
+ *                              role:
+ *                                  type: string
+ */
+userRouter.post('/login', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const userInput: UserInput = req.body;
+        const response = await userService.authenticate(userInput);
+        res.status(200).json({ message: 'Authentication successful', ...response });
+    } catch (error) {
+        next(error);
+    }
+});
 export { userRouter };
