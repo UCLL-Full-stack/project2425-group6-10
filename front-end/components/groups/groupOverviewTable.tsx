@@ -7,30 +7,30 @@ type Props = {
 
 const GroupOverviewTable: React.FC<Props> = ({ groups, onRowClick }) => {
   return (
-    <>
-      <table className="groups-table">
-        <thead className="group-table-header">
-          <tr>
-            <th className="group-header-cell">Name</th>
-            <th className="group-header-cell">Description</th>
-            <th className="group-header-cell">Code</th>
+    <div className="overflow-x-auto">
+      <table className="min-w-full bg-white shadow-md rounded-lg">
+        <thead>
+          <tr className="bg-gray-100 text-gray-700">
+            <th className="px-4 py-2 text-left">Name</th>
+            <th className="px-4 py-2 text-left">Description</th>
+            <th className="px-4 py-2 text-left">Code</th>
           </tr>
         </thead>
         <tbody>
-          {groups.map((group, index) => (
+          {groups.map((group) => (
             <tr
-              key={index}
-              className="group-table-row"
+              key={group.id}
+              className="cursor-pointer hover:bg-gray-50 transition"
               onClick={() => onRowClick(group.id)}
             >
-              <td className="group-cell">{group.name}</td>
-              <td className="group-cell">{group.description}</td>
-              <td className="group-cell">{group.code}</td>
+              <td className="px-4 py-2 border-b">{group.name}</td>
+              <td className="px-4 py-2 border-b">{group.description}</td>
+              <td className="px-4 py-2 border-b">{group.code}</td>
             </tr>
           ))}
         </tbody>
       </table>
-    </>
+    </div>
   );
 };
 
