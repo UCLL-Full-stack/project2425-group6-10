@@ -3,10 +3,13 @@ import { group } from "console";
 import { get } from "http";
 
 const getUsersByGroup = async (id: number) => {
+  const token = JSON.parse(localStorage.getItem("loggedInUser"))?.token;
+
   return await fetch(process.env.NEXT_PUBLIC_API_URL + "/users/group/" + id, {
     method: "GET",
     headers: {
       "content-type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
   });
 };
