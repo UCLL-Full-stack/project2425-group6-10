@@ -49,7 +49,7 @@ const createUser = async ({ username, email, password }: UserInput): Promise<Use
     if (password === undefined) {
         throw new Error('Password is required');
     }
-    const existingUser = await userDb.getUserbyUsername(email);
+    const existingUser = await userDb.getUserbyUsername(username);
     if (existingUser) {
         throw new Error('User already exists');
     }

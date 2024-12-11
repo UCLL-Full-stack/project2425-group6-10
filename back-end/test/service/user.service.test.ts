@@ -194,7 +194,7 @@ test('given: username email password, when: creating user, then: user is created
     const result = await userService.createUser(userInput);
 
     expect(mockGetUserByUsername).toHaveBeenCalledTimes(1);
-    expect(mockGetUserByUsername).toHaveBeenCalledWith(userInput.email);
+    expect(mockGetUserByUsername).toHaveBeenCalledWith(userInput.username);
 
     expect(mockHashPassword).toHaveBeenCalledTimes(1);
     expect(mockHashPassword).toHaveBeenCalledWith(userInput.password, 10);
@@ -254,7 +254,7 @@ test('given: existing user, when: creating user, then: error is thrown', async (
         'User already exists'
     );
     expect(mockUserDbGetUserByUsername).toHaveBeenCalledTimes(1);
-    expect(mockUserDbGetUserByUsername).toHaveBeenCalledWith(email);
+    expect(mockUserDbGetUserByUsername).toHaveBeenCalledWith(username);
 
     expect(mockUserDbCreateUser).toHaveBeenCalledTimes(0);
 });
