@@ -27,17 +27,20 @@ const Header: React.FC = () => {
           </Link>
         </div>
 
-        {/* Navigation */}
         <ul className="flex items-center space-x-4">
-          <li>
-            <Link
-              href="/groups"
-              className="px-4 py-2 rounded-lg font-semibold hover:bg-white hover:text-purple-500 transition-all"
-            >
-              Groups
-            </Link>
-          </li>
-
+        {/* Navigation */}
+        {loggedInUser && (
+          <>
+            <li>
+              <Link
+                href="/groups"
+                className="px-4 py-2 rounded-lg font-semibold hover:bg-white hover:text-purple-500 transition-all"
+              >
+                Groups
+              </Link>
+            </li>
+          </>
+        )}
           {/* User */}
           {!loggedInUser && (
             <>
