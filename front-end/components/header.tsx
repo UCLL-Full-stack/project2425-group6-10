@@ -1,17 +1,81 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { User } from '@/types';
 
 const Header: React.FC = () => {
+  const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('loggedInUser');
+    if (storedUser) {
+      setLoggedInUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('loggedInUser');
+    setLoggedInUser(null);
+  };
+
   return (
-    <header>
-      <nav>
-        <ul>
+    <header className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white shadow-lg">
+      <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
+        {/* Logo eventueel nog */}
+        <div className="text-2xl font-extrabold tracking-wide">
+          <Link href="/" className="hover:opacity-90 transition-opacity">
+            CampusChat
+          </Link>
+        </div>
+
+        {/* Navigation */}
+        <ul className="flex items-center space-x-4">
           <li>
-            <Link href="/">Home</Link>
+            <Link
+              href="/groups"
+              className="px-4 py-2 rounded-lg font-semibold hover:bg-white hover:text-purple-500 transition-all"
+            >
+              Groups
+            </Link>
           </li>
-          <li>
-            <Link href="/groups">Groups</Link>
-          </li>
+
+          {/* User */}
+          {!loggedInUser && (
+            <>
+              <li>
+                <Link
+                  href="/signup"
+                  className="px-4 py-2 bg-white text-indigo-500 font-semibold rounded-lg shadow hover:shadow-lg hover:bg-indigo-100 transition-all"
+                >
+                  Signup
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/login"
+                  className="px-4 py-2 bg-purple-600 font-semibold rounded-lg shadow hover:shadow-lg hover:bg-purple-700 transition-all"
+                >
+                  Login
+                </Link>
+              </li>
+            </>
+          )}
+          {loggedInUser && (
+            <>
+              <li>
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-2 bg-red-500 font-semibold rounded-lg shadow hover:shadow-lg hover:bg-red-600 transition-all"
+                >
+                  Logout
+                </button>
+              </li>
+              <li>
+                <span className="text-sm bg-gray-800 px-3 py-1 rounded-lg">
+                  {loggedInUser.username}
+                </span>
+              </li>
+            </>
+          )}
         </ul>
       </nav>
     </header>

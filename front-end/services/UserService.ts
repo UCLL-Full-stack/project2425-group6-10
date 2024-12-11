@@ -1,3 +1,4 @@
+import { User } from "@/types";
 import { group } from "console";
 import { get } from "http";
 
@@ -10,8 +11,30 @@ const getUsersByGroup = async (id: number) => {
   });
 };
 
-const GroupService = {
-  getUsersByGroup,
+const loginUser = (user: User) => {
+  return fetch(process.env.NEXT_PUBLIC_API_URL + "/users/login", {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+  });
 };
 
-export default GroupService;
+const signupUser = (user: { username: string; email: string; password: string }) => {
+  return fetch(process.env.NEXT_PUBLIC_API_URL + "/users/signup", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(user),
+  });
+};
+
+const UserService = {
+  getUsersByGroup,
+  loginUser,
+  signupUser,
+};
+
+export default UserService;
