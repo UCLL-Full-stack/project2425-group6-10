@@ -6,8 +6,8 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>CampusChat - Connect Effortlessly</title>
-        <meta name="description" content="CampusChat: Your hub for effortless communication." />
+        <title>CampusChat</title>
+        <meta name="description" content="CampusChat home page." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

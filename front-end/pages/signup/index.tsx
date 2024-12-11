@@ -7,7 +7,7 @@ const Signup: React.FC = () => {
     <>
       <Head>
         <title>User Signup</title>
-        <meta name="description" content="Sign up for CampusChat to connect and collaborate effortlessly." />
+        <meta name="description" content="Sign up for CampusChat." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <Header />

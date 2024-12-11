@@ -7,7 +7,7 @@ const Login: React.FC = () => {
     <>
       <Head>
         <title>User Login</title>
-        <meta name="description" content="Login to CampusChat to connect and collaborate effortlessly." />
+        <meta name="description" content="Login to CampusChat." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <Header />
