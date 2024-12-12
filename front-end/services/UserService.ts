@@ -38,10 +38,25 @@ const signupUser = (user: {
   });
 };
 
+const addGroupToUser = async (username: string, groupCode: string) => {
+  const token = JSON.parse(localStorage.getItem("loggedInUser"))?.token;
+
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/users/${username}/groups/${groupCode}`;
+
+  return await fetch(url, {
+    method: "PUT",
+    headers: {
+      "content-type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 const UserService = {
   getUsersByGroup,
   loginUser,
   signupUser,
+  addGroupToUser,
 };
 
 export default UserService;
