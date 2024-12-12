@@ -21,6 +21,7 @@ const user = new User({
     password: 'John1234',
     role: 'student',
     groups: [],
+    messages: [],
 });
 
 let mockGroupDbGetAllGroups: jest.Mock;

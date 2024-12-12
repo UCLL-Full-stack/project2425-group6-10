@@ -7,6 +7,7 @@ test('given: user with valid values, when: creating a new user, then: user is cr
         password: 'John1234',
         role: 'student',
         groups: [],
+        messages: [],
     });
 
     expect(user.getUsername()).toBe('JohnDoe');
@@ -23,6 +24,7 @@ test('given: user with empty username, when: creating a new user, then: an error
             password: 'John1234',
             role: 'student',
             groups: [],
+            messages: [],
         });
     };
 
@@ -37,6 +39,7 @@ test('given: user with only spaces in username, when: creating a new user, then:
             password: 'John1234',
             role: 'student',
             groups: [],
+            messages: [],
         });
     };
 
@@ -51,6 +54,7 @@ test('given: user with empty email, when: creating a new user, then: an error is
             password: 'John1234',
             role: 'student',
             groups: [],
+            messages: [],
         });
     };
 
@@ -65,6 +69,7 @@ test('given: user with only spaces in email, when: creating a new user, then: an
             password: 'John1234',
             role: 'student',
             groups: [],
+            messages: [],
         });
     };
 
@@ -79,6 +84,7 @@ test('given: user with invalid email, when: creating a new user, then: an error 
             password: 'John1234',
             role: 'student',
             groups: [],
+            messages: [],
         });
     };
 
@@ -93,6 +99,7 @@ test('given: user with empty password, when: creating a new user, then: an error
             password: '',
             role: 'student',
             groups: [],
+            messages: [],
         });
     };
 
@@ -107,6 +114,7 @@ test('given: user with only spaces in password, when: creating a new user, then:
             password: '      ',
             role: 'student',
             groups: [],
+            messages: [],
         });
     };
 
@@ -121,6 +129,7 @@ test('given: user with password less than 8 characters, when: creating a new use
             password: 'john123',
             role: 'student',
             groups: [],
+            messages: [],
         });
     };
 
@@ -135,6 +144,7 @@ test('given: user with empty role, when: creating a new user, then: an error is 
             password: 'john1234',
             role: '' as any,
             groups: [],
+            messages: [],
         });
     };
 
@@ -149,6 +159,7 @@ test('given: user with only spaces role, when: creating a new user, then: an err
             password: 'john1234',
             role: '     ' as any,
             groups: [],
+            messages: [],
         });
     };
 
@@ -163,6 +174,7 @@ test('given: user with invalid role, when: creating a new user, then: an error i
             password: 'john1234',
             role: 'guest' as any,
             groups: [],
+            messages: [],
         });
     };
 
