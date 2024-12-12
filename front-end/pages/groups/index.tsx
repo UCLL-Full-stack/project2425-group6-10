@@ -11,16 +11,7 @@ const Groups: React.FC = () => {
   const [isUnauthorized, setIsUnauthorized] = useState<boolean>(false);
 
   const fetchGroups = async () => {
-    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-    const username = loggedInUser?.username;
-    const role = loggedInUser?.role;
-
-    if (!username || !role) {
-      setIsUnauthorized(true);
-      return;
-    }
-
-    const response = await GroupService.getAllGroups(username, role);
+    const response = await GroupService.getAllGroups();
 
     if (response.status === 401) {
       setIsUnauthorized(true);

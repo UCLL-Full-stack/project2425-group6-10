@@ -1,4 +1,4 @@
-const getAllGroups = async (username: string, role: string) => {
+const getAllGroups = async () => {
   const token = JSON.parse(localStorage.getItem("loggedInUser"))?.token;
 
   return await fetch(process.env.NEXT_PUBLIC_API_URL + "/groups", {
