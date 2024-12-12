@@ -43,7 +43,8 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
       } else if (response.status === 400) {
         setNoAccess(true);
       } else if (response.ok) {
-        setMessages(await response.json());
+        const newMessages = await response.json();
+        setMessages(newMessages);
       }
     } catch (error) {
       console.error("Error fetching messages:", error);
@@ -98,6 +99,11 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
     }
     fetchGroupDetails();
     fetchMessages();
+
+    // Polling
+    const interval = setInterval(fetchMessages, 1000);
+
+    return () => clearInterval(interval); // Clear the interval on component unmount ??
   }, []);
 
   useEffect(() => {
