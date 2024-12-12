@@ -25,6 +25,11 @@ const Groups: React.FC = () => {
   };
 
   const handleJoinGroup = async () => {
+    if (!groupCode.trim()) {
+      setErrorMessage("Group code cannot be empty.");
+      return;
+    }
+
     const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
 
     if (!loggedInUser) {
@@ -40,6 +45,7 @@ const Groups: React.FC = () => {
     if (response.ok) {
       fetchGroups();
       setGroupCode("");
+      setErrorMessage(null);
     } else {
       const errorData = await response.json();
       setErrorMessage(errorData.message || "Failed to join group.");
@@ -99,7 +105,7 @@ const Groups: React.FC = () => {
         )}
         {/* Group Overview Table */}
         {groups.length > 0 ? (
-          <GroupOverviewTable groups={groups} onRowClick={() => {}} />
+          <GroupOverviewTable groups={groups} />
         ) : (
           <p className="text-gray-600">No groups available.</p>
         )}
