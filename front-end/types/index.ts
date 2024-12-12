@@ -18,3 +18,10 @@ export type StatusMessage = {
     message: string;
     type: "error" | "success";
 };
+
+export type Message = {
+    id?: number;
+    content?: string;
+    date?: string;
+  };
+  
