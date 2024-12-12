@@ -23,5 +23,6 @@ export type Message = {
     id?: number;
     content?: string;
     date?: string;
+    user?: { id: number; username: string };
   };
   

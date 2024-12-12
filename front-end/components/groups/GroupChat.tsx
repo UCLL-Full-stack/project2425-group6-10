@@ -15,6 +15,9 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
   const [newMessage, setNewMessage] = useState<string>("");
   const [isUnauthorized, setIsUnauthorized] = useState(false);
   const [noAccess, setNoAccess] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useState<{ username: string } | null>(
+    null
+  );
   const messageEndRef = useRef<HTMLDivElement>(null);
 
   const fetchGroupDetails = async () => {
@@ -65,7 +68,16 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
         setNoAccess(true);
       } else if (response.ok) {
         const newMessageData = await response.json();
-        setMessages((prevMessages) => [...prevMessages, newMessageData]);
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          {
+            ...newMessageData,
+            user: {
+              id: loggedInUser?.username, // Attach logged-in user's data
+              username: loggedInUser?.username || "Unknown User",
+            },
+          },
+        ]);
         setNewMessage("");
       }
     } catch (error) {
@@ -80,6 +92,10 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
   };
 
   useEffect(() => {
+    const storedUser = localStorage.getItem("loggedInUser");
+    if (storedUser) {
+      setLoggedInUser(JSON.parse(storedUser));
+    }
     fetchGroupDetails();
     fetchMessages();
   }, []);
@@ -117,23 +133,35 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
 
       {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-white">
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className="p-4 bg-gray-100 rounded-lg shadow-sm"
-          >
-            <p className="text-gray-800">{message.content}</p>
-            {message.date && !isNaN(new Date(message.date).getTime()) ? (
-              <span className="text-xs text-gray-500 block text-right">
-                {new Date(message.date).toLocaleString()}
-              </span>
-            ) : (
-              <span className="text-xs text-gray-500 block text-right">
-                Invalid Date
-              </span>
-            )}
-          </div>
-        ))}
+        {messages.map((message) => {
+          const isUserMessage =
+            loggedInUser && message.user?.username === loggedInUser.username;
+
+          return (
+            <div
+              key={message.id}
+              className={`p-4 rounded-lg shadow-sm ${
+                isUserMessage
+                  ? "bg-indigo-100 text-indigo-900 self-end"
+                  : "bg-gray-100 text-gray-800"
+              }`}
+            >
+              <p className="text-sm font-semibold">
+                {message.user?.username || "Unknown User"}
+              </p>
+              <p className="mt-1">{message.content}</p>
+              {message.date && !isNaN(new Date(message.date).getTime()) ? (
+                <span className="text-xs text-gray-500 block text-right">
+                  {new Date(message.date).toLocaleString()}
+                </span>
+              ) : (
+                <span className="text-xs text-gray-500 block text-right">
+                  Invalid Date
+                </span>
+              )}
+            </div>
+          );
+        })}
         <div ref={messageEndRef} />
       </div>
 
