@@ -73,7 +73,7 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
           {
             ...newMessageData,
             user: {
-              id: loggedInUser?.username, // Attach logged-in user's data
+              id: loggedInUser?.username,
               username: loggedInUser?.username || "Unknown User",
             },
           },

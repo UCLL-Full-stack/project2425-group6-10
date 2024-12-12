@@ -23,7 +23,7 @@ const getMessagesByGroup = async (groupId: number): Promise<Message[]> => {
                 user: {
                     select: {
                         id: true,
-                        username: true, // Include username
+                        username: true,
                     },
                 },
             },

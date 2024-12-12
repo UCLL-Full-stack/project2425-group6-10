@@ -8,7 +8,7 @@ export class Message {
     private content: string;
     private date: string;
     private group?: Group;
-    private user?: { id: number; username: string }; // Simplified user details
+    private user?: { id: number; username: string };
 
     constructor(message: {
         id?: number;
