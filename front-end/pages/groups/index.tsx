@@ -46,6 +46,12 @@ const Groups: React.FC = () => {
     }
   };
 
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleJoinGroup();
+    }
+  };
+
   useEffect(() => {
     fetchGroups();
   }, []);
@@ -72,6 +78,7 @@ const Groups: React.FC = () => {
             type="text"
             value={groupCode}
             onChange={(e) => setGroupCode(e.target.value)}
+            onKeyPress={handleKeyPress}
             placeholder="Enter Group Code"
             className="border px-4 py-2 rounded-md mr-4"
           />
@@ -85,8 +92,11 @@ const Groups: React.FC = () => {
         </div>
 
         {/* Error Message */}
-        {errorMessage && <p className="text-red-600">{errorMessage}</p>}
-
+        {errorMessage && (
+          <div className="flex items-center gap-2 bg-red-100 border border-red-500 text-red-700 p-3 rounded mb-4">
+            <span>{errorMessage}</span>
+          </div>
+        )}
         {/* Group Overview Table */}
         {groups.length > 0 ? (
           <GroupOverviewTable groups={groups} onRowClick={() => {}} />
