@@ -53,4 +53,38 @@ messageRouter.get('/', async (req: Request, res: Response, next: NextFunction) =
     }
 });
 
+/**
+ * @swagger
+ * /messages/group/{groupId}:
+ *  get:
+ *      security:
+ *         - bearerAuth: []
+ *      summary: Get messages by group
+ *      parameters:
+ *          - in: path
+ *            name: groupId
+ *            required: true
+ *            schema:
+ *              type: integer
+ *            description: The group id
+ *      responses:
+ *          200:
+ *              description: A list of messages
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: '#/components/schemas/Message'
+ */
+messageRouter.get('/group/:groupId', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const groupId = parseInt(req.params.groupId);
+        const messages = await messageService.getMessagesByGroup(groupId);
+        res.status(200).json(messages);
+    } catch (error) {
+        next(error);
+    }
+});
+
 export { messageRouter };

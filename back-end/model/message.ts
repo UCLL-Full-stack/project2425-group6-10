@@ -1,14 +1,18 @@
 import { Message as MessagePrisma } from '@prisma/client';
+import { Group as GroupPrisma } from '@prisma/client';
+import { Group } from './group';
 export class Message {
     private id?: number;
     private content: string;
     private date: string;
+    private group?: Group;
 
-    constructor(message: { id?: number; content: string }) {
+    constructor(message: { id?: number; content: string; group?: Group }) {
         this.validate(message);
         this.id = message.id;
         this.content = message.content;
         this.date = this.formatDate(new Date());
+        this.group = message.group;
     }
 
     getId(): number | undefined {
@@ -21,6 +25,9 @@ export class Message {
 
     getDate(): string {
         return this.date;
+    }
+    getGroup(): Group | undefined {
+        return this.group;
     }
 
     validate(message: { id?: number; content: string }) {
@@ -39,10 +46,11 @@ export class Message {
         return `${day}/${month}/${year} ${hours}:${minutes}`;
     }
 
-    static from({ id, content }: MessagePrisma) {
+    static from({ id, content, group }: MessagePrisma & { group?: Group }) {
         return new Message({
             id,
             content,
+            group,
         });
     }
 }

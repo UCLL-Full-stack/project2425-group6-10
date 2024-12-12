@@ -1,19 +1,28 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Group as groupsPrisma } from '@prisma/client';
 import { User } from './user';
+import { Message } from './message';
 
 export class Group {
     readonly id?: number;
     readonly name: string;
     readonly description: string;
     readonly code: string;
+    readonly messages: Message[];
 
-    constructor(group: { id: number; name: string; description: string; code?: string }) {
+    constructor(group: {
+        id: number;
+        name: string;
+        description: string;
+        code?: string;
+        messages?: Message[];
+    }) {
         this.validate(group);
         this.id = group.id;
         this.name = group.name;
         this.description = group.description;
         this.code = group.code || this.generateCode();
+        this.messages = group.messages || [];
     }
 
     getId(): number | undefined {
@@ -30,6 +39,9 @@ export class Group {
 
     getCode(): string {
         return this.code;
+    }
+    getMessages(): Message[] {
+        return this.messages;
     }
 
     validate(group: { id: number; name: string; description: string }) {
@@ -55,6 +67,7 @@ export class Group {
             name,
             description,
             code,
+            messages: [],
         });
     }
 }
