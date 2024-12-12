@@ -3,6 +3,7 @@ import { Group, Message } from "@/types";
 import GroupService from "@/services/GroupService";
 import UnauthorizedAccess from "@/components/users/UnauthorizedAccess";
 import NoAccess from "@/components/groups/NoAccess";
+import MessageService from "@/services/MessageService";
 
 type Props = {
   groupId: number;
@@ -50,10 +51,32 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const handleSendMessage = () => {
-    // Placeholder for send message logic
-    alert("Message sending is not yet implemented.");
-    setNewMessage("");
+  const handleSendMessage = async () => {
+    if (newMessage.trim() === "") {
+      alert("Message content cannot be empty.");
+      return;
+    }
+
+    try {
+      const response = await MessageService.sendMessage(groupId, newMessage);
+      if (response.status === 401) {
+        setIsUnauthorized(true);
+      } else if (response.status === 400) {
+        setNoAccess(true);
+      } else if (response.ok) {
+        const newMessageData = await response.json();
+        setMessages((prevMessages) => [...prevMessages, newMessageData]);
+        setNewMessage("");
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSendMessage();
+    }
   };
 
   useEffect(() => {
@@ -100,9 +123,15 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
             className="p-4 bg-gray-100 rounded-lg shadow-sm"
           >
             <p className="text-gray-800">{message.content}</p>
-            <span className="text-xs text-gray-500 block text-right">
-              {new Date(message.date).toLocaleString()}
-            </span>
+            {message.date && !isNaN(new Date(message.date).getTime()) ? (
+              <span className="text-xs text-gray-500 block text-right">
+                {new Date(message.date).toLocaleString()}
+              </span>
+            ) : (
+              <span className="text-xs text-gray-500 block text-right">
+                Invalid Date
+              </span>
+            )}
           </div>
         ))}
         <div ref={messageEndRef} />
@@ -116,6 +145,7 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
           onChange={(e) => setNewMessage(e.target.value)}
           placeholder="Type a message..."
           className="flex-1 px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          onKeyDown={handleKeyPress}
         />
         <button
           onClick={handleSendMessage}

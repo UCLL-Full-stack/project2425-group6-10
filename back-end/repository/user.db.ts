@@ -3,7 +3,9 @@ import database from '../util/database';
 
 const getAllUsers = async (): Promise<User[]> => {
     try {
-        const usersPrisma = await database.user.findMany({ include: { groups: true } });
+        const usersPrisma = await database.user.findMany({
+            include: { groups: true, messages: true },
+        });
         return usersPrisma.map((userPrisma) => User.from(userPrisma));
     } catch (error) {
         console.error(error);
@@ -15,7 +17,7 @@ const getUserById = async (id: number): Promise<User | null> => {
     try {
         const userPrisma = await database.user.findUnique({
             where: { id },
-            include: { groups: true },
+            include: { groups: true, messages: true },
         });
         return userPrisma ? User.from(userPrisma) : null;
     } catch (error) {
@@ -33,7 +35,7 @@ const addGroupToUser = async (username: string, groupCode: string): Promise<User
                 },
             },
             where: { username: username },
-            include: { groups: true },
+            include: { groups: true, messages: true },
         });
         return User.from(userPrisma);
     } catch (error) {
@@ -53,6 +55,7 @@ const getUsersByGroupId = async (groupId: number): Promise<User[]> => {
             },
             include: {
                 groups: true,
+                messages: true,
             },
         });
         return usersPrisma.map((userPrisma) => User.from(userPrisma));
@@ -71,7 +74,7 @@ const createUser = async ({ username, password, email, role }: User): Promise<Us
                 email,
                 role,
             },
-            include: { groups: true },
+            include: { groups: true, messages: true },
         });
         return User.from(userPrisma);
     } catch (error) {
@@ -84,7 +87,7 @@ const getUserbyUsername = async (username: string): Promise<User | null> => {
     try {
         const userPrisma = await database.user.findFirst({
             where: { username },
-            include: { groups: true },
+            include: { groups: true, messages: true },
         });
         return userPrisma ? User.from(userPrisma) : null;
     } catch (error) {
@@ -97,7 +100,7 @@ const getUserbyEmail = async (email: string): Promise<User | null> => {
     try {
         const userPrisma = await database.user.findFirst({
             where: { email },
-            include: { groups: true },
+            include: { groups: true, messages: true },
         });
         return userPrisma ? User.from(userPrisma) : null;
     } catch (error) {

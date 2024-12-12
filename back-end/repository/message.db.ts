@@ -27,7 +27,24 @@ const getMessagesByGroup = async (groupId: number): Promise<Message[]> => {
     }
 };
 
+const sendMessage = async (userId: number, groupId: number, content: string): Promise<Message> => {
+    try {
+        const messagePrisma = await database.message.create({
+            data: {
+                userId,
+                groupId,
+                content,
+            },
+        });
+
+        return Message.from(messagePrisma);
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
 export default {
     getAllMessages,
     getMessagesByGroup,
+    sendMessage,
 };

@@ -90,4 +90,50 @@ messageRouter.get('/group/:groupId', async (req: Request, res: Response, next: N
     }
 });
 
+/**
+ * @swagger
+ * /messages/send:
+ *   post:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Send a message to a group
+ *     parameters:
+ *       - in: body
+ *         name: message
+ *         description: The message content and group to send the message to.
+ *         schema:
+ *           type: object
+ *           required:
+ *             - groupId
+ *             - content
+ *           properties:
+ *             groupId:
+ *               type: integer
+ *               description: The ID of the group to send the message to.
+ *             content:
+ *               type: string
+ *               description: The content of the message.
+ *     responses:
+ *       200:
+ *         description: Message successfully sent
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Message'
+ *       400:
+ *         description: Invalid input
+ *       500:
+ *         description: Internal server error
+ */
+messageRouter.post('/send', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const request = req as Request & { auth: { username: string; role: Role } };
+        const { username } = request.auth;
+        const { groupId, content } = req.body;
+        const message = await messageService.sendMessage(username, groupId, content);
+        res.status(200).json(message);
+    } catch (error) {
+        next(error);
+    }
+});
 export { messageRouter };

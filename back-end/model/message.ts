@@ -1,18 +1,28 @@
 import { Message as MessagePrisma } from '@prisma/client';
 import { Group as GroupPrisma } from '@prisma/client';
+import { User as UserPrisma } from '@prisma/client';
 import { Group } from './group';
+import { User } from './user';
 export class Message {
     private id?: number;
     private content: string;
     private date: string;
     private group?: Group;
+    private user?: User;
 
-    constructor(message: { id?: number; content: string; group?: Group }) {
+    constructor(message: {
+        id?: number;
+        content: string;
+        group?: Group;
+        user?: User;
+        date?: string;
+    }) {
         this.validate(message);
         this.id = message.id;
         this.content = message.content;
-        this.date = this.formatDate(new Date());
+        this.date = message.date ? message.date : this.formatDate(new Date()); // Use the passed date or the current date
         this.group = message.group;
+        this.user = message.user;
     }
 
     getId(): number | undefined {
@@ -28,6 +38,9 @@ export class Message {
     }
     getGroup(): Group | undefined {
         return this.group;
+    }
+    getUser(): User | undefined {
+        return this.user;
     }
 
     validate(message: { id?: number; content: string }) {
@@ -46,11 +59,19 @@ export class Message {
         return `${day}/${month}/${year} ${hours}:${minutes}`;
     }
 
-    static from({ id, content, group }: MessagePrisma & { group?: Group }) {
+    static from({
+        id,
+        content,
+        group,
+        user,
+        date,
+    }: MessagePrisma & { group?: Group; user?: User; date?: string }) {
         return new Message({
             id,
             content,
             group,
+            user,
+            date,
         });
     }
 }

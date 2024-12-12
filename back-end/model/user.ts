@@ -1,7 +1,8 @@
 import { group } from 'console';
 import { Role } from '../types';
-import { User as UserPrisma, Group as GroupPrisma } from '@prisma/client';
+import { User as UserPrisma, Group as GroupPrisma, Message as MessagePrisma } from '@prisma/client';
 import { Group } from './group';
+import { Message } from './message';
 
 export class User {
     readonly id?: number;
@@ -10,6 +11,7 @@ export class User {
     readonly password: string;
     readonly role: Role;
     readonly groups: Group[];
+    readonly messages: Message[];
 
     constructor(user: {
         id?: number;
@@ -18,6 +20,7 @@ export class User {
         password: string;
         role: Role;
         groups: Group[];
+        messages: Message[];
     }) {
         this.validate(user);
         this.id = user.id;
@@ -26,6 +29,7 @@ export class User {
         this.password = user.password;
         this.role = user.role;
         this.groups = user.groups;
+        this.messages = user.messages;
     }
 
     getId(): number | undefined {
@@ -84,7 +88,8 @@ export class User {
         email,
         role,
         groups,
-    }: UserPrisma & { groups: GroupPrisma[] }) {
+        messages,
+    }: UserPrisma & { groups: GroupPrisma[]; messages: MessagePrisma[] }) {
         return new User({
             id,
             username,
@@ -92,6 +97,7 @@ export class User {
             email,
             role: role as Role,
             groups: groups.map((group) => Group.from(group)),
+            messages: messages.map((message) => Message.from(message)),
         });
     }
 }

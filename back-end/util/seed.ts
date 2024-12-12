@@ -28,10 +28,10 @@ const generateUniqueCode = async (): Promise<string> => {
 };
 
 const main = async () => {
-    await prisma.user.deleteMany();
-    await prisma.report.deleteMany();
     await prisma.message.deleteMany();
+    await prisma.report.deleteMany();
     await prisma.group.deleteMany();
+    await prisma.user.deleteMany();
     await resetSequences();
 
     const marketingGroup = await prisma.group.create({
@@ -142,63 +142,78 @@ const main = async () => {
             content:
                 "Welcome to the Marketing group! Let's discuss the latest trends and strategies.",
             groupId: marketingGroup.id,
+            userId: student1.id,
         },
         {
             content: 'Does anyone have ideas for the next marketing campaign? We need fresh ideas!',
             groupId: marketingGroup.id,
+            userId: student2.id,
         },
         {
             content: 'How do you all feel about the latest digital marketing tools?',
             groupId: marketingGroup.id,
+            userId: lecturer.id,
         },
         {
             content: "Hello everyone! Ready for the CS competition? Let's prepare together!",
             groupId: computerScienceGroup.id,
+            userId: student1.id,
         },
         {
             content: 'Has anyone solved the algorithm problem in the last assignment?',
             groupId: computerScienceGroup.id,
+            userId: student2.id,
         },
         {
             content: 'Hey all, can anyone help with debugging the code for the project?',
             groupId: computerScienceGroup.id,
+            userId: lecturer.id,
         },
         {
             content: 'Who is up for the next Business seminar? We need to start planning.',
             groupId: businessGroup.id,
+            userId: student1.id,
         },
         {
             content:
                 'Does anyone have the answer to the business strategy question from last class?',
             groupId: businessGroup.id,
+            userId: student2.id,
         },
         {
             content: "Hi all! Let's discuss the upcoming entrepreneurial event.",
             groupId: businessGroup.id,
+            userId: lecturer.id,
         },
         {
             content: "What creative projects are you currently working on? Let's share!",
             groupId: artGroup.id,
+            userId: student1.id,
         },
         {
             content: "Who here is passionate about modern art? Let's discuss the latest trends!",
             groupId: artGroup.id,
+            userId: student2.id,
         },
         {
             content: 'Does anyone have suggestions for our next art exhibition?',
             groupId: artGroup.id,
+            userId: lecturer.id,
         },
         {
             content: "Engineering students! Let's talk about the latest tech advancements.",
             groupId: engineeringGroup.id,
+            userId: student1.id,
         },
         {
             content: 'Does anyone know the best platform to collaborate on engineering projects?',
             groupId: engineeringGroup.id,
+            userId: student2.id,
         },
         {
             content: 'Hey engineers, can we start a discussion about the new robotics project?',
             groupId: engineeringGroup.id,
+            userId: lecturer.id,
         },
     ];
 
@@ -207,6 +222,7 @@ const main = async () => {
             data: {
                 content: message.content,
                 groupId: message.groupId,
+                userId: message.userId,
             },
         });
     }

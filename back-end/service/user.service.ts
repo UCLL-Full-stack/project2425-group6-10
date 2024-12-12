@@ -64,6 +64,7 @@ const createUser = async ({ username, email, password }: UserInput): Promise<Use
         password: hashedPassword,
         role: 'student',
         groups: [],
+        messages: [],
     });
     await userDb.createUser(user);
     return user;
