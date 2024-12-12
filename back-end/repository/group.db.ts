@@ -70,8 +70,31 @@ const getGroupsByUsername = async (username: string): Promise<Group[]> => {
     }
 };
 
+const getGroupByCode = async (code: string): Promise<Group | null> => {
+    try {
+        const groupPrisma = await database.group.findUnique({
+            where: { code },
+            include: {
+                users: {
+                    select: {
+                        id: true,
+                        username: true,
+                        email: true,
+                        role: true,
+                    },
+                },
+            },
+        });
+        return groupPrisma ? Group.from(groupPrisma) : null;
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
+
 export default {
     getAllGroups,
     getGroupById,
     getGroupsByUsername,
+    getGroupByCode,
 };

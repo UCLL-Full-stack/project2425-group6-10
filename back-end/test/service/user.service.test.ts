@@ -43,6 +43,8 @@ let mockUserDbGetUsersByGroupId: jest.Mock;
 let mockUserDbCreateUser: jest.Mock;
 let mockUserDbGetUserByUsername: jest.Mock;
 let mockGenerateJwtToken: jest.Mock;
+let mockUserDbGetGroupByCode: jest.Mock;
+let mockUserDbGetUserbyUsername: jest.Mock;
 
 beforeEach(() => {
     mockUserDbGetAllUsers = jest.fn();
@@ -53,6 +55,8 @@ beforeEach(() => {
     mockUserDbCreateUser = jest.fn();
     mockUserDbGetUserByUsername = jest.fn();
     mockGenerateJwtToken = jest.fn();
+    mockUserDbGetGroupByCode = jest.fn();
+    mockUserDbGetUserbyUsername = jest.fn();
 });
 
 afterEach(() => {
@@ -90,11 +94,11 @@ test('given: user id, when getUserById, then: user not found error is thrown', a
 });
 
 test('given: user id and group id, when addGroupToUser, then: user with group is returned', async () => {
-    const userId = 1;
-    const groupId = 1;
+    const username = 'JohnDoe';
+    const groupCode = 'AE1234';
 
-    userDb.getUserById = mockUserDbGetUserById.mockReturnValue(users[0]);
-    groupDb.getGroupById = mockUserDbGetGroupById.mockReturnValue(groups[0]);
+    userDb.getUserbyUsername = mockUserDbGetUserByUsername.mockReturnValue(users[0]);
+    groupDb.getGroupByCode = mockUserDbGetGroupByCode.mockReturnValue(groups[0]);
 
     const updatedUser = {
         ...users[0],
@@ -102,44 +106,45 @@ test('given: user id and group id, when addGroupToUser, then: user with group is
     };
     userDb.addGroupToUser = mockUserDbAddGroupToUser.mockReturnValue(updatedUser);
 
-    const result = await userService.addGroupToUser(userId, groupId);
+    const result = await userService.addGroupToUser(username, groupCode);
 
-    expect(mockUserDbGetUserById).toHaveBeenCalledTimes(1);
-    expect(mockUserDbGetUserById).toHaveBeenCalledWith(userId);
-    expect(mockUserDbGetGroupById).toHaveBeenCalledTimes(1);
-    expect(mockUserDbGetGroupById).toHaveBeenCalledWith(groupId);
+    expect(mockUserDbGetUserByUsername).toHaveBeenCalledTimes(1);
+    expect(mockUserDbGetUserByUsername).toHaveBeenCalledWith(username);
+    expect(mockUserDbGetGroupByCode).toHaveBeenCalledTimes(1);
+    expect(mockUserDbGetGroupByCode).toHaveBeenCalledWith(groupCode);
     expect(mockUserDbAddGroupToUser).toHaveBeenCalledTimes(1);
-    expect(mockUserDbAddGroupToUser).toHaveBeenCalledWith(userId, groupId);
+    expect(mockUserDbAddGroupToUser).toHaveBeenCalledWith(username, groupCode);
     expect(result).toEqual(updatedUser);
 });
 
 test('given: user id and group id, when addGroupToUser, then: user not found error is thrown', async () => {
-    const userId = 3;
-    const groupId = 1;
+    const username = 'JohnDoe';
+    const groupCode = 'AE1234';
 
-    userDb.getUserById = mockUserDbGetUserById.mockReturnValue(null);
+    userDb.getUserbyUsername = mockUserDbGetUserByUsername.mockReturnValue(null);
+    groupDb.getGroupByCode = mockUserDbGetGroupByCode.mockReturnValue(groups[0]);
 
-    await expect(userService.addGroupToUser(userId, groupId)).rejects.toThrow(
-        `User with id 3 not found`
+    await expect(userService.addGroupToUser(username, groupCode)).rejects.toThrow(
+        `User JohnDoe not found`
     );
-    expect(mockUserDbGetUserById).toHaveBeenCalledTimes(1);
-    expect(mockUserDbGetUserById).toHaveBeenCalledWith(userId);
+    expect(mockUserDbGetUserByUsername).toHaveBeenCalledTimes(1);
+    expect(mockUserDbGetUserByUsername).toHaveBeenCalledWith(username);
 });
 
 test('given: user id and group id, when addGroupToUser, then: group not found error is thrown', async () => {
-    const userId = 1;
-    const groupId = 3;
+    const username = 'JohnDoe';
+    const groupCode = 'AE1234';
 
-    userDb.getUserById = mockUserDbGetUserById.mockReturnValue(users[0]);
-    groupDb.getGroupById = mockUserDbGetGroupById.mockReturnValue(null);
+    userDb.getUserbyUsername = mockUserDbGetUserByUsername.mockReturnValue(users[0]);
+    groupDb.getGroupByCode = mockUserDbGetGroupByCode.mockReturnValue(null);
 
-    await expect(userService.addGroupToUser(userId, groupId)).rejects.toThrow(
-        `Group with id 3 not found`
+    await expect(userService.addGroupToUser(username, groupCode)).rejects.toThrow(
+        `Group with code AE1234 not found`
     );
-    expect(mockUserDbGetUserById).toHaveBeenCalledTimes(1);
-    expect(mockUserDbGetUserById).toHaveBeenCalledWith(userId);
-    expect(mockUserDbGetGroupById).toHaveBeenCalledTimes(1);
-    expect(mockUserDbGetGroupById).toHaveBeenCalledWith(groupId);
+    expect(mockUserDbGetUserByUsername).toHaveBeenCalledTimes(1);
+    expect(mockUserDbGetUserByUsername).toHaveBeenCalledWith(username);
+    expect(mockUserDbGetGroupByCode).toHaveBeenCalledTimes(1);
+    expect(mockUserDbGetGroupByCode).toHaveBeenCalledWith(groupCode);
 });
 
 test('given: group id, when getUsersByGroupId, then: list of users is returned', async () => {

@@ -24,15 +24,15 @@ const getUserById = async (id: number): Promise<User | null> => {
     }
 };
 
-const addGroupToUser = async (userId: number, groupId: number): Promise<User> => {
+const addGroupToUser = async (username: string, groupCode: string): Promise<User> => {
     try {
         const userPrisma = await database.user.update({
             data: {
                 groups: {
-                    connect: { id: groupId },
+                    connect: { code: groupCode },
                 },
             },
-            where: { id: userId },
+            where: { username: username },
             include: { groups: true },
         });
         return User.from(userPrisma);

@@ -1,13 +1,30 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import { v4 as uuidv4 } from 'uuid';
 
 const prisma = new PrismaClient();
 const resetSequences = async () => {
-    // Reset the sequence for each table with auto-incrementing IDs
     await prisma.$executeRaw`ALTER SEQUENCE "User_id_seq" RESTART WITH 1;`;
     await prisma.$executeRaw`ALTER SEQUENCE "Group_id_seq" RESTART WITH 1;`;
     await prisma.$executeRaw`ALTER SEQUENCE "Message_id_seq" RESTART WITH 1;`;
     await prisma.$executeRaw`ALTER SEQUENCE "Report_id_seq" RESTART WITH 1;`;
+};
+const generateUniqueCode = async (): Promise<string> => {
+    let code: string = '';
+    let isUnique = false;
+
+    while (!isUnique) {
+        code = uuidv4().substring(0, 6);
+        const existingGroup = await prisma.group.findUnique({
+            where: { code },
+        });
+
+        if (!existingGroup) {
+            isUnique = true;
+        }
+    }
+
+    return code;
 };
 
 const main = async () => {
@@ -21,6 +38,7 @@ const main = async () => {
         data: {
             name: 'Marketing',
             description: 'Marketing and advertising group.',
+            code: await generateUniqueCode(),
         },
     });
 
@@ -28,6 +46,7 @@ const main = async () => {
         data: {
             name: 'Computer Science',
             description: 'Computer science and technology discussions.',
+            code: await generateUniqueCode(),
         },
     });
 
@@ -35,6 +54,7 @@ const main = async () => {
         data: {
             name: 'Business',
             description: 'Business and entrepreneurship discussions.',
+            code: await generateUniqueCode(),
         },
     });
 
@@ -42,6 +62,7 @@ const main = async () => {
         data: {
             name: 'Art',
             description: 'Art, literature, and creative works discussions.',
+            code: await generateUniqueCode(),
         },
     });
 
@@ -49,6 +70,7 @@ const main = async () => {
         data: {
             name: 'Engineering',
             description: 'Engineering and technology projects and discussions.',
+            code: await generateUniqueCode(),
         },
     });
     const admin = await prisma.user.create({

@@ -53,6 +53,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import userService from '../service/user.service';
 import { User } from '@prisma/client';
 import { UserInput } from '../types';
+import { parseISOWithOptions } from 'date-fns/fp';
 
 const userRouter = express.Router();
 
@@ -84,7 +85,7 @@ userRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
 
 /**
  * @swagger
- * /users/{userId}/groups/{groupId}:
+ * /users/{userId}/groups/{groupCode}:
  *  put:
  *      security:
  *      - bearerAuth: []
@@ -97,11 +98,11 @@ userRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
  *            schema:
  *              type: integer
  *          - in: path
- *            name: groupId
+ *            name: groupCode
  *            required: true
- *            description: Id of the group
+ *            description: Code of the group
  *            schema:
- *              type: integer
+ *              type: string
  *      responses:
  *          200:
  *              description: A user object after group assignment
@@ -110,17 +111,17 @@ userRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
  *                      schema:
  *                          $ref: '#/components/schemas/User'
  *          400:
- *              description: Invalid userId or groupId
+ *              description: Invalid userId or groupCode
  *          404:
  *              description: User or group not found
  */
 userRouter.put(
-    '/:userId/groups/:groupId',
+    '/:username/groups/:groupCode',
     async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const userId = parseInt(req.params.userId);
-            const groupId = parseInt(req.params.groupId);
-            const user = await userService.addGroupToUser(userId, groupId);
+            const username = req.params.username;
+            const groupCode = req.params.groupCode;
+            const user = await userService.addGroupToUser(username, groupCode);
             res.status(200).json(user);
         } catch (error) {
             next(error);

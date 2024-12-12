@@ -18,16 +18,20 @@ const getUserById = async (id: number): Promise<User | null> => {
     return user;
 };
 
-const addGroupToUser = async (userId: number, groupId: number): Promise<User> => {
-    if (!userDb.getUserById(userId)) {
-        throw new Error(`User with id ${userId} not found`);
+const addGroupToUser = async (username: string, groupCode: string): Promise<User> => {
+    if (!(await userDb.getUserbyUsername(username))) {
+        throw new Error(`User ${username} not found`);
     }
-
-    if (!groupDb.getGroupById(groupId)) {
-        throw new Error(`Group with id ${groupId} not found`);
+    if (!groupCode) {
+        throw new Error('Group code is required');
     }
-
-    const user = await userDb.addGroupToUser(userId, groupId);
+    if (!username) {
+        throw new Error('User id is required');
+    }
+    if (!(await groupDb.getGroupByCode(groupCode))) {
+        throw new Error(`Group with code ${groupCode} not found`);
+    }
+    const user = await userDb.addGroupToUser(username, groupCode);
     return user;
 };
 

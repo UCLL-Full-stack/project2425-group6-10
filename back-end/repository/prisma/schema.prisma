@@ -26,7 +26,7 @@ model Group {
   id          Int    @id @default(autoincrement())
   name        String
   description String
-  code        String @default(uuid())
+  code        String @default(uuid()) @unique
   users       User[] @relation("GroupToUser")
   messages    Message[] @relation("GroupToMessage")
 }
