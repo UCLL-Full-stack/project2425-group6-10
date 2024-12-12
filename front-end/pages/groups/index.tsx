@@ -12,6 +12,7 @@ const Groups: React.FC = () => {
   const [isUnauthorized, setIsUnauthorized] = useState<boolean>(false);
   const [groupCode, setGroupCode] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [loggedInUser, setLoggedInUser] = useState<{ username: string; role: string } | null>(null);
 
   const fetchGroups = async () => {
     const response = await GroupService.getAllGroups();
@@ -30,17 +31,12 @@ const Groups: React.FC = () => {
       return;
     }
 
-    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-
     if (!loggedInUser) {
       setIsUnauthorized(true);
       return;
     }
 
-    const response = await UserService.addGroupToUser(
-      loggedInUser.username,
-      groupCode
-    );
+    const response = await UserService.addGroupToUser(loggedInUser.username, groupCode);
 
     if (response.ok) {
       fetchGroups();
@@ -59,6 +55,10 @@ const Groups: React.FC = () => {
   };
 
   useEffect(() => {
+    const storedUser = localStorage.getItem("loggedInUser");
+    if (storedUser) {
+      setLoggedInUser(JSON.parse(storedUser));
+    }
     fetchGroups();
   }, []);
 
@@ -78,24 +78,26 @@ const Groups: React.FC = () => {
       >
         <h1 className="text-3xl font-bold mb-6">Groups</h1>
 
-        {/* Input for Group Code */}
-        <div className="mb-6">
-          <input
-            type="text"
-            value={groupCode}
-            onChange={(e) => setGroupCode(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Enter Group Code"
-            className="border px-4 py-2 rounded-md mr-4"
-          />
-          <button
-            onClick={handleJoinGroup}
-            className="bg-blue-500 text-white py-2 px-4 rounded"
-            disabled={!groupCode}
-          >
-            Join Group
-          </button>
-        </div>
+        {/* Show join group if role != admin */}
+        {loggedInUser?.role !== "admin" && (
+          <div className="mb-6">
+            <input
+              type="text"
+              value={groupCode}
+              onChange={(e) => setGroupCode(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Enter Group Code"
+              className="border px-4 py-2 rounded-md mr-4"
+            />
+            <button
+              onClick={handleJoinGroup}
+              className="bg-blue-500 text-white py-2 px-4 rounded"
+              disabled={!groupCode}
+            >
+              Join Group
+            </button>
+          </div>
+        )}
 
         {/* Error Message */}
         {errorMessage && (
@@ -103,6 +105,7 @@ const Groups: React.FC = () => {
             <span>{errorMessage}</span>
           </div>
         )}
+
         {/* Group Overview Table */}
         {groups.length > 0 ? (
           <GroupOverviewTable groups={groups} />
