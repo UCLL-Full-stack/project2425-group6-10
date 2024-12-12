@@ -63,4 +63,53 @@ groupRouter.get('/', async (req: Request, res: Response, next: NextFunction) => 
     }
 });
 
+/**
+ * @swagger
+ * /groups/{groupId}:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Get group by ID
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the group
+ *     responses:
+ *       200:
+ *         description: The group details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Group'
+ *       401:
+ *         description: Unauthorized error
+ *       404:
+ *         description: Group not found
+ */
+groupRouter.get(
+    '/:groupId',
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const groupId = parseInt(req.params.groupId, 10);
+  
+        if (isNaN(groupId)) {
+          return res.status(400).json({ error: 'Invalid group ID' });
+        }
+  
+        const group = await groupService.getGroupById(groupId);
+  
+        if (!group) {
+          return res.status(404).json({ error: 'Group not found' });
+        }
+  
+        res.status(200).json(group);
+      } catch (error) {
+        next(error);
+      }
+    }
+  );  
+
 export { groupRouter };

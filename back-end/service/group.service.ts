@@ -18,4 +18,8 @@ const getGroups = async (username: string, role: Role): Promise<Group[]> => {
     }
 };
 
-export default { getGroups };
+const getGroupById = async (groupId: number): Promise<Group | null> => {
+    return await groupDb.getGroupById(groupId);
+};
+
+export default { getGroups, getGroupById };

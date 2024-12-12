@@ -19,7 +19,7 @@ const getAllGroups = async (): Promise<Group[]> => {
     }
 };
 
-const getGroupById = async (groupId: number): Promise<Group | null> => {
+/*const getGroupById = async (groupId: number): Promise<Group | null> => {
     try {
         const groupPrisma = await database.group.findUnique({
             where: { id: groupId },
@@ -39,7 +39,7 @@ const getGroupById = async (groupId: number): Promise<Group | null> => {
         console.error(error);
         throw new Error('Database error. See server log for details.');
     }
-};
+};*/
 
 const getGroupsByUsername = async (username: string): Promise<Group[]> => {
     try {
@@ -91,6 +91,28 @@ const getGroupByCode = async (code: string): Promise<Group | null> => {
         throw new Error('Database error. See server log for details.');
     }
 };
+
+const getGroupById = async (groupId: number): Promise<Group | null> => {
+    try {
+      const groupPrisma = await database.group.findUnique({
+        where: { id: groupId },
+        include: {
+          messages: {
+            select: {
+              id: true,
+              content: true,
+              date: true,
+            },
+          },
+        },
+      });
+  
+      return groupPrisma ? Group.from(groupPrisma) : null;
+    } catch (error) {
+      console.error(error);
+      throw new Error('Database error. See server log for details.');
+    }
+};  
 
 export default {
     getAllGroups,
