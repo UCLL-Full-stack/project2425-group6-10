@@ -44,12 +44,26 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
         setNoAccess(true);
       } else if (response.ok) {
         const newMessages = await response.json();
-        setMessages(newMessages);
+  
+        // Use functional state update to ensure the latest `messages` state // TO FIX SCROLLTOBOTOM ON EVERY SECOND BECAUSE OF POLLING
+        setMessages((prevMessages) => {
+          if (
+            newMessages.length !== prevMessages.length ||
+            !newMessages.every((msg, index) => msg.id === prevMessages[index]?.id)
+          ) {
+            //console.log("Messages updated:", newMessages);
+            return newMessages;
+          }
+          //console.log("Messages unchanged.");
+          return prevMessages;
+        });
       }
     } catch (error) {
       console.error("Error fetching messages:", error);
     }
   };
+  
+  
 
   const scrollToBottom = () => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -97,14 +111,17 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
     if (storedUser) {
       setLoggedInUser(JSON.parse(storedUser));
     }
+  
+    // Initial fetch
     fetchGroupDetails();
     fetchMessages();
-
+  
     // Polling
     const interval = setInterval(fetchMessages, 1000);
-
-    return () => clearInterval(interval); // Clear the interval on component unmount ??
+  
+    return () => clearInterval(interval); // Cleanup
   }, []);
+  
 
   useEffect(() => {
     scrollToBottom();
@@ -155,7 +172,7 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
               <p className="text-sm font-semibold">
                 {message.user?.username || "Unknown User"}
               </p>
-              <p className="mt-1">{message.content}</p>
+              <p className="mt-1 break-words whitespace-pre-wrap">{message.content}</p>
               {message.date && !isNaN(new Date(message.date).getTime()) ? (
                 <span className="text-xs text-gray-500 block text-right">
                   {new Date(message.date).toLocaleString()}
