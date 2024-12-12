@@ -14,8 +14,6 @@ const Groups: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const fetchGroups = async () => {
-    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-
     const response = await GroupService.getAllGroups();
 
     if (response.status === 401) {
