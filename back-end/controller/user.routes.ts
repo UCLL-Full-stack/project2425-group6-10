@@ -1,40 +1,53 @@
 /**
  * @swagger
  * components:
- *   securitySchemes:
- *     bearerAuth:
- *       type: http
- *       scheme: bearer
- *       bearerFormat: JWT
- *   schemas:
- *     User:
- *       type: object
- *       required:
- *         - username
- *         - email
- *         - password
- *         - role
- *       properties:
- *         id:
- *           type: number
- *           description: id for the user
- *         username:
- *           type: string
- *           description: Username of the user
- *         email:
- *           type: string
- *           format: email
- *           description: Email address of the user
- *         password:
- *           type: string
- *           description: Password of the user
- *         role:
- *           type: string
- *           description: Role of the user ( admin, lecturer or student)
- *         groups:
+ *  schemas:
+ *    User:
+ *      type: object
+ *      required:
+ *        - username
+ *        - email
+ *        - password
+ *        - role
+ *      properties:
+ *        id:
+ *          type: number
+ *          description: id for the user
+ *        username:
+ *          type: string
+ *          description: Username of the user
+ *        email:
+ *          type: string
+ *          format: email
+ *          description: Email address of the user
+ *        password:
+ *          type: string
+ *          description: Password of the user
+ *        role:
+ *          type: string
+ *          description: Role of the user (admin, lecturer, or student)
+ *        groups:
  *          type: array
- *         items:
- *         $ref: '#/components/schemas/Group'
+ *          items:
+ *            $ref: '#/components/schemas/Group'
+ *    Group:
+ *      type: object
+ *      required:
+ *        - name
+ *        - description
+ *      properties:
+ *        id:
+ *          type: number
+ *          description: id for group
+ *        name:
+ *          type: string
+ *          description: name of the group
+ *        description:
+ *          type: string
+ *          description: description of the group
+ *        code:
+ *          type: string
+ *          description: code of the group
  */
 import express, { NextFunction, Request, Response } from 'express';
 import userService from '../service/user.service';
@@ -71,11 +84,11 @@ userRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
 
 /**
  * @swagger
- * /users/{userId}:
- *  get:
+ * /users/{userId}/groups/{groupId}:
+ *  put:
  *      security:
  *      - bearerAuth: []
- *      summary: Get user by id
+ *      summary: Add a user to a group
  *      parameters:
  *          - in: path
  *            name: userId
@@ -83,13 +96,23 @@ userRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
  *            description: Id of the user
  *            schema:
  *              type: integer
+ *          - in: path
+ *            name: groupId
+ *            required: true
+ *            description: Id of the group
+ *            schema:
+ *              type: integer
  *      responses:
  *          200:
- *              description: A user object
+ *              description: A user object after group assignment
  *              content:
  *                  application/json:
  *                      schema:
  *                          $ref: '#/components/schemas/User'
+ *          400:
+ *              description: Invalid userId or groupId
+ *          404:
+ *              description: User or group not found
  */
 userRouter.put(
     '/:userId/groups/:groupId',

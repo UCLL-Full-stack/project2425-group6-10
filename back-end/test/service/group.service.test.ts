@@ -24,10 +24,12 @@ const user = new User({
 });
 
 let mockGroupDbGetAllGroups: jest.Mock;
+let mockGroupDbGetGroupsByUsername: jest.Mock;
 let mockUserDbAddUserToGroup: jest.Mock;
 
 beforeEach(() => {
     mockGroupDbGetAllGroups = jest.fn();
+    mockGroupDbGetGroupsByUsername = jest.fn();
     mockUserDbAddUserToGroup = jest.fn();
 });
 
@@ -35,11 +37,32 @@ afterEach(() => {
     jest.clearAllMocks();
 });
 
-test('given: list of groups, when getAllGroups, then: list of groups is returned', () => {
+test('given: list of groups, when getAllGroups as admin, then: list of groups is returned', () => {
     groupDb.getAllGroups = mockGroupDbGetAllGroups.mockReturnValue(groups);
-
-    groupService.getAllGroups();
+    const username = 'admin';
+    const role = 'admin';
+    groupService.getGroups(username, role);
 
     expect(mockGroupDbGetAllGroups).toHaveBeenCalledTimes(1);
     expect(mockGroupDbGetAllGroups).toHaveReturnedWith(groups);
+});
+
+test('given: list of groups, when getAllGroups as student, then: list of groups of that student is returned', () => {
+    groupDb.getGroupsByUsername = mockGroupDbGetGroupsByUsername.mockReturnValue(groups);
+    const username = 'johnDoe';
+    const role = 'student';
+    groupService.getGroups(username, role);
+
+    expect(mockGroupDbGetGroupsByUsername).toHaveBeenCalledTimes(1);
+    expect(mockGroupDbGetGroupsByUsername).toHaveReturnedWith(groups);
+});
+
+test('given: list of groups, when getAllGroups as lecturer, then: list of groups of that lecturer is returned', () => {
+    groupDb.getGroupsByUsername = mockGroupDbGetGroupsByUsername.mockReturnValue(groups);
+    const username = 'johnDoe';
+    const role = 'lecturer';
+    groupService.getGroups(username, role);
+
+    expect(mockGroupDbGetGroupsByUsername).toHaveBeenCalledTimes(1);
+    expect(mockGroupDbGetGroupsByUsername).toHaveReturnedWith(groups);
 });

@@ -41,7 +41,37 @@ const getGroupById = async (groupId: number): Promise<Group | null> => {
     }
 };
 
+const getGroupsByUsername = async (username: string): Promise<Group[]> => {
+    try {
+        const groupsPrisma = await database.group.findMany({
+            where: {
+                users: {
+                    some: {
+                        username: username,
+                    },
+                },
+            },
+            include: {
+                users: {
+                    select: {
+                        id: true,
+                        username: true,
+                        email: true,
+                        role: true,
+                    },
+                },
+            },
+        });
+
+        return groupsPrisma.map((groupPrisma) => Group.from(groupPrisma));
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
+
 export default {
     getAllGroups,
     getGroupById,
+    getGroupsByUsername,
 };

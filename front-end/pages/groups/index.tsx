@@ -11,7 +11,16 @@ const Groups: React.FC = () => {
   const [isUnauthorized, setIsUnauthorized] = useState<boolean>(false);
 
   const fetchGroups = async () => {
-    const response = await GroupService.getAllGroups();
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    const username = loggedInUser?.username;
+    const role = loggedInUser?.role;
+
+    if (!username || !role) {
+      setIsUnauthorized(true);
+      return;
+    }
+
+    const response = await GroupService.getAllGroups(username, role);
 
     if (response.status === 401) {
       setIsUnauthorized(true);
@@ -34,7 +43,11 @@ const Groups: React.FC = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-      <main className={`container mx-auto px-6 py-12 ${isUnauthorized ? "opacity-50" : "opacity-100"}`}>
+      <main
+        className={`container mx-auto px-6 py-12 ${
+          isUnauthorized ? "opacity-50" : "opacity-100"
+        }`}
+      >
         <h1 className="text-3xl font-bold mb-6">Groups</h1>
         {groups.length > 0 ? (
           <GroupOverviewTable groups={groups} onRowClick={() => {}} />
