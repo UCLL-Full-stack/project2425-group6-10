@@ -24,6 +24,7 @@
  */
 import express, { NextFunction, Request, Response } from 'express';
 import messageService from '../service/message.service';
+import { Role } from '@prisma/client';
 
 const messageRouter = express.Router();
 
@@ -79,10 +80,10 @@ messageRouter.get('/', async (req: Request, res: Response, next: NextFunction) =
  */
 messageRouter.get('/group/:groupId', async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const request = req as Request & { auth: { username: string; role: string } };
-        const { username } = request.auth;
+        const request = req as Request & { auth: { username: string; role: Role } };
+        const { username, role } = request.auth;
         const groupId = parseInt(req.params.groupId);
-        const messages = await messageService.getMessagesByGroup(username, groupId);
+        const messages = await messageService.getMessagesByGroup(username, groupId, role);
         res.status(200).json(messages);
     } catch (error) {
         next(error);
