@@ -8,19 +8,19 @@ export class Message {
     private content: string;
     private date: string;
     private group?: Group;
-    private user?: User;
+    private user?: { id: number; username: string }; // Simplified user details
 
     constructor(message: {
         id?: number;
         content: string;
         group?: Group;
-        user?: User;
+        user?: { id: number; username: string };
         date?: string;
     }) {
         this.validate(message);
         this.id = message.id;
         this.content = message.content;
-        this.date = message.date ? message.date : this.formatDate(new Date()); // Use the passed date or the current date
+        this.date = message.date ? message.date : this.formatDate(new Date());
         this.group = message.group;
         this.user = message.user;
     }
@@ -36,10 +36,12 @@ export class Message {
     getDate(): string {
         return this.date;
     }
+
     getGroup(): Group | undefined {
         return this.group;
     }
-    getUser(): User | undefined {
+
+    getUser(): { id: number; username: string } | undefined {
         return this.user;
     }
 
@@ -65,7 +67,7 @@ export class Message {
         group,
         user,
         date,
-    }: MessagePrisma & { group?: Group; user?: User; date?: string }) {
+    }: MessagePrisma & { group?: Group; user?: { id: number; username: string }; date?: string }) {
         return new Message({
             id,
             content,

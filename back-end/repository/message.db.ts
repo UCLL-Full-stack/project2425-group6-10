@@ -19,13 +19,28 @@ const getMessagesByGroup = async (groupId: number): Promise<Message[]> => {
                     id: groupId,
                 },
             },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        username: true, // Include username
+                    },
+                },
+            },
         });
-        return messagesPrisma.map((messagePrisma) => Message.from(messagePrisma));
+
+        return messagesPrisma.map((messagePrisma) =>
+            Message.from({
+                ...messagePrisma,
+                user: messagePrisma.user ? { id: messagePrisma.user.id, username: messagePrisma.user.username } : undefined,
+            })
+        );
     } catch (error) {
         console.error(error);
         throw new Error('Database error. See server log for details.');
     }
 };
+
 
 const sendMessage = async (userId: number, groupId: number, content: string): Promise<Message> => {
     try {
