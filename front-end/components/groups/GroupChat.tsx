@@ -51,7 +51,7 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
           if (
             newMessages.length !== prevMessages.length ||
             !newMessages.every(
-              (msg, index) => msg.id === prevMessages[index]?.id
+              (msg: Message, index: number) => msg.id === prevMessages[index]?.id
             )
           ) {
             //console.log("Messages updated:", newMessages);
