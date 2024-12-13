@@ -15,6 +15,7 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
   const [newMessage, setNewMessage] = useState<string>("");
   const [isUnauthorized, setIsUnauthorized] = useState(false);
   const [noAccess, setNoAccess] = useState(false);
+  const [isSending, setIsSending] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState<{ username: string } | null>(
     null
   );
@@ -44,12 +45,14 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
         setNoAccess(true);
       } else if (response.ok) {
         const newMessages = await response.json();
-  
+
         // Use functional state update to ensure the latest `messages` state // TO FIX SCROLLTOBOTOM ON EVERY SECOND BECAUSE OF POLLING
         setMessages((prevMessages) => {
           if (
             newMessages.length !== prevMessages.length ||
-            !newMessages.every((msg, index) => msg.id === prevMessages[index]?.id)
+            !newMessages.every(
+              (msg, index) => msg.id === prevMessages[index]?.id
+            )
           ) {
             //console.log("Messages updated:", newMessages);
             return newMessages;
@@ -62,8 +65,6 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
       console.error("Error fetching messages:", error);
     }
   };
-  
-  
 
   const scrollToBottom = () => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -74,7 +75,8 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
       alert("Message content cannot be empty.");
       return;
     }
-
+    if (isSending) return;
+    setIsSending(true);
     try {
       const response = await MessageService.sendMessage(groupId, newMessage);
       if (response.status === 401) {
@@ -97,6 +99,8 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
       }
     } catch (error) {
       console.error("Error sending message:", error);
+    } finally {
+      setIsSending(false);
     }
   };
 
@@ -111,17 +115,16 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
     if (storedUser) {
       setLoggedInUser(JSON.parse(storedUser));
     }
-  
+
     // Initial fetch
     fetchGroupDetails();
     fetchMessages();
-  
+
     // Polling
     const interval = setInterval(fetchMessages, 1000);
-  
+
     return () => clearInterval(interval); // Cleanup
   }, []);
-  
 
   useEffect(() => {
     scrollToBottom();
@@ -172,7 +175,9 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
               <p className="text-sm font-semibold">
                 {message.user?.username || "Unknown User"}
               </p>
-              <p className="mt-1 break-words whitespace-pre-wrap">{message.content}</p>
+              <p className="mt-1 break-words whitespace-pre-wrap">
+                {message.content}
+              </p>
               {message.date && !isNaN(new Date(message.date).getTime()) ? (
                 <span className="text-xs text-gray-500 block text-right">
                   {new Date(message.date).toLocaleString()}
@@ -200,9 +205,12 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
         />
         <button
           onClick={handleSendMessage}
-          className="bg-indigo-600 text-white px-4 py-2 rounded-lg shadow hover:bg-indigo-700"
+          className={`${
+            isSending ? "bg-gray-400" : "bg-indigo-600 hover:bg-indigo-700"
+          } text-white px-4 py-2 rounded-lg shadow`}
+          disabled={isSending}
         >
-          Send
+          {isSending ? "Sending..." : "Send"}
         </button>
       </div>
     </div>
