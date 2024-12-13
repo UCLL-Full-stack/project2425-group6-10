@@ -3,7 +3,9 @@ import { group } from "console";
 import { get } from "http";
 
 const getUsersByGroup = async (id: number) => {
-  const token = JSON.parse(localStorage.getItem("loggedInUser"))?.token;
+  //const token = JSON.parse(localStorage.getItem("loggedInUser"))?.token;
+  const storedUser = localStorage.getItem("loggedInUser");
+  const token = storedUser ? JSON.parse(storedUser).token : null;
 
   return await fetch(process.env.NEXT_PUBLIC_API_URL + "/users/group/" + id, {
     method: "GET",
@@ -39,7 +41,9 @@ const signupUser = (user: {
 };
 
 const addGroupToUser = async (username: string, groupCode: string) => {
-  const token = JSON.parse(localStorage.getItem("loggedInUser"))?.token;
+  //const token = JSON.parse(localStorage.getItem("loggedInUser"))?.token;
+  const storedUser = localStorage.getItem("loggedInUser");
+  const token = storedUser ? JSON.parse(storedUser).token : null;
 
   const url = `${process.env.NEXT_PUBLIC_API_URL}/users/${username}/groups/${groupCode}`;
 

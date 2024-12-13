@@ -1,5 +1,7 @@
 const getAllGroups = async () => {
-  const token = JSON.parse(localStorage.getItem("loggedInUser"))?.token;
+  //const token = JSON.parse(localStorage.getItem("loggedInUser"))?.token;
+  const storedUser = localStorage.getItem("loggedInUser");
+  const token = storedUser ? JSON.parse(storedUser).token : null;
 
   return await fetch(process.env.NEXT_PUBLIC_API_URL + "/groups", {
     method: "GET",
@@ -11,7 +13,9 @@ const getAllGroups = async () => {
 };
 
 const getGroupById = async (id: number) => {
-  const token = JSON.parse(localStorage.getItem("loggedInUser"))?.token;
+  //const token = JSON.parse(localStorage.getItem("loggedInUser"))?.token;
+  const storedUser = localStorage.getItem("loggedInUser");
+  const token = storedUser ? JSON.parse(storedUser).token : null;
 
   return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/groups/${id}`, {
     method: "GET",
@@ -23,15 +27,20 @@ const getGroupById = async (id: number) => {
 };
 
 const getMessagesByGroupId = async (groupId: number) => {
-  const token = JSON.parse(localStorage.getItem("loggedInUser"))?.token;
+  //const token = JSON.parse(localStorage.getItem("loggedInUser"))?.token;
+  const storedUser = localStorage.getItem("loggedInUser");
+  const token = storedUser ? JSON.parse(storedUser).token : null;
 
-  return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/messages/group/${groupId}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  return await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/messages/group/${groupId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 };
 
 const GroupService = {
