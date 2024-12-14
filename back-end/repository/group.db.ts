@@ -11,6 +11,9 @@ const getAllGroups = async (): Promise<Group[]> => {
             include: {
                 users: true,
             },
+            orderBy: {
+                name: 'asc',
+            },
         });
         return groupsPrisma.map((groupPrisma) => Group.from(groupPrisma));
     } catch (error) {
@@ -60,6 +63,9 @@ const getGroupsByUsername = async (username: string): Promise<Group[]> => {
                         role: true,
                     },
                 },
+            },
+            orderBy: {
+                name: 'asc',
             },
         });
 
@@ -132,10 +138,33 @@ const createGroup = async (group: Group, lecturerId?: number): Promise<Group> =>
     }
 };
 
+const updateGroup = async (groupId: number, group: Group, code: string): Promise<Group> => {
+    try {
+        const existingGroup = await database.group.findUnique({
+            where: { id: groupId },
+        });
+
+        const groupPrisma = await database.group.update({
+            where: { id: groupId },
+            data: {
+                name: group.getName(),
+                description: group.getDescription(),
+                code: code,
+            },
+        });
+
+        return Group.from(groupPrisma);
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
+
 export default {
     getAllGroups,
     getGroupById,
     getGroupsByUsername,
     getGroupByCode,
     createGroup,
+    updateGroup,
 };

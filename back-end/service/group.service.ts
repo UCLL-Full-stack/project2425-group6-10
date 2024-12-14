@@ -55,4 +55,43 @@ const createGroup = async (
     return await groupDb.createGroup(newGroup, lecturerId);
 };
 
-export default { getGroups, getGroupById, createGroup };
+const updateGroup = async (
+    Role: Role,
+    groupId: number,
+    regenerateCode: boolean,
+    { name, description }: GroupInput
+): Promise<Group> => {
+    if (!name) {
+        throw new Error('Group name is required');
+    }
+    if (!description) {
+        throw new Error('Group description is required');
+    }
+    if (Role !== 'admin' && Role !== 'lecturer') {
+        throw new UnauthorizedError('credentials_required', {
+            message: 'You are not authorized to access this resource.',
+        });
+    }
+
+    const existingGroup = await groupDb.getGroupById(groupId);
+    if (!existingGroup) {
+        throw new Error('Group not found');
+    }
+    let code = existingGroup.getCode();
+    if (regenerateCode) {
+        while ((await groupDb.getGroupByCode(code)) !== null) {
+            code = existingGroup.generateCode();
+        }
+    }
+
+    const group = new Group({
+        id: existingGroup.getId(),
+        name,
+        description,
+        code,
+    });
+
+    return await groupDb.updateGroup(groupId, group, code);
+};
+
+export default { getGroups, getGroupById, createGroup, updateGroup };

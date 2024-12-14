@@ -57,11 +57,35 @@ const createGroup = async (name: string, description: string) => {
   });
 };
 
+const updateGroup = async (
+  groupId: number,
+  name: string,
+  description: string,
+  regenerateCode: boolean
+) => {
+  const storedUser = localStorage.getItem("loggedInUser");
+  const token = storedUser ? JSON.parse(storedUser).token : null;
+
+  return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/groups/${groupId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      name,
+      description,
+      regenerateCode, // This will be sent to the backend
+    }),
+  });
+};
+
 const GroupService = {
   getAllGroups,
   getGroupById,
   getMessagesByGroupId,
   createGroup,
+  updateGroup,
 };
 
 export default GroupService;

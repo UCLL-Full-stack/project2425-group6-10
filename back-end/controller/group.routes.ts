@@ -155,4 +155,75 @@ groupRouter.post('/create', async (req: Request, res: Response, next: NextFuncti
     }
 });
 
+/**
+ * @swagger
+ * /groups/{groupId}:
+ *   put:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Update a group
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the group
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - description
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: Updated name of the group
+ *               description:
+ *                 type: string
+ *                 description: Updated description of the group
+ *               regenerateCode:
+ *                 type: boolean
+ *                 description: Whether to regenerate the group code
+ *     responses:
+ *       200:
+ *         description: The updated group details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Group'
+ *       400:
+ *         description: Bad request error
+ *       401:
+ *         description: Unauthorized error
+ *       404:
+ *         description: Group not found
+ */
+groupRouter.put('/:groupId', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const groupId = parseInt(req.params.groupId, 10);
+
+        if (isNaN(groupId)) {
+            return res.status(400).json({ error: 'Invalid group ID' });
+        }
+
+        const request = req as Request & { auth: { username: string; role: Role } };
+        const { role } = request.auth; // Extract role from the auth token
+        const { name, description, regenerateCode } = req.body;
+
+        // Pass the role along with other parameters to the groupService.updateGroup
+        const updatedGroup = await groupService.updateGroup(role, groupId, regenerateCode, {
+            name,
+            description,
+        }); // Add role parameter here
+
+        res.status(200).json(updatedGroup);
+    } catch (error) {
+        next(error);
+    }
+});
+
 export { groupRouter };
