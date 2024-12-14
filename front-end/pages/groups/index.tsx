@@ -84,18 +84,18 @@ const Groups: React.FC = () => {
           isUnauthorized ? "opacity-50" : "opacity-100"
         }`}
       >
-        {loggedInUser?.role === "admin" ||
-          (loggedInUser?.role === "lecturer" && (
-            <>
-              <h1 className="text-3xl font-bold mb-6">Groups</h1>
-              <button
-                onClick={() => setShowCreateModal(true)}
-                className="bg-blue-500 text-white py-2 px-4 rounded mb-6"
-              >
-                Create Group
-              </button>
-            </>
-          ))}
+        {(loggedInUser?.role === "admin" ||
+          loggedInUser?.role === "lecturer") && (
+          <>
+            <h1 className="text-3xl font-bold mb-6">Groups</h1>
+            <button
+              onClick={() => setShowCreateModal(true)}
+              className="bg-blue-500 text-white py-2 px-4 rounded mb-6"
+            >
+              Create Group
+            </button>
+          </>
+        )}
 
         {showCreateModal && (
           <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
