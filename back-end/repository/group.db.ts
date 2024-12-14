@@ -94,29 +94,48 @@ const getGroupByCode = async (code: string): Promise<Group | null> => {
 
 const getGroupById = async (groupId: number): Promise<Group | null> => {
     try {
-      const groupPrisma = await database.group.findUnique({
-        where: { id: groupId },
-        include: {
-          messages: {
-            select: {
-              id: true,
-              content: true,
-              date: true,
+        const groupPrisma = await database.group.findUnique({
+            where: { id: groupId },
+            include: {
+                messages: {
+                    select: {
+                        id: true,
+                        content: true,
+                        date: true,
+                    },
+                },
             },
-          },
-        },
-      });
-  
-      return groupPrisma ? Group.from(groupPrisma) : null;
+        });
+
+        return groupPrisma ? Group.from(groupPrisma) : null;
     } catch (error) {
-      console.error(error);
-      throw new Error('Database error. See server log for details.');
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
     }
-};  
+};
+
+const createGroup = async (group: Group, lecturerId?: number): Promise<Group> => {
+    try {
+        const groupPrisma = await database.group.create({
+            data: {
+                name: group.getName(),
+                description: group.getDescription(),
+                code: group.getCode(),
+                users: lecturerId ? { connect: [{ id: lecturerId }] } : undefined,
+            },
+        });
+
+        return Group.from(groupPrisma);
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
 
 export default {
     getAllGroups,
     getGroupById,
     getGroupsByUsername,
     getGroupByCode,
+    createGroup,
 };

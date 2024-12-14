@@ -89,27 +89,70 @@ groupRouter.get('/', async (req: Request, res: Response, next: NextFunction) => 
  *       404:
  *         description: Group not found
  */
-groupRouter.get(
-    '/:groupId',
-    async (req: Request, res: Response, next: NextFunction) => {
-      try {
+groupRouter.get('/:groupId', async (req: Request, res: Response, next: NextFunction) => {
+    try {
         const groupId = parseInt(req.params.groupId, 10);
-  
+
         if (isNaN(groupId)) {
-          return res.status(400).json({ error: 'Invalid group ID' });
+            return res.status(400).json({ error: 'Invalid group ID' });
         }
-  
+
         const group = await groupService.getGroupById(groupId);
-  
+
         if (!group) {
-          return res.status(404).json({ error: 'Group not found' });
+            return res.status(404).json({ error: 'Group not found' });
         }
-  
+
         res.status(200).json(group);
-      } catch (error) {
+    } catch (error) {
         next(error);
-      }
     }
-  );  
+});
+
+/**
+ * @swagger
+ * /groups/create:
+ *   post:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Create a new group
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - description
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: The group was successfully created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Group'
+ *       400:
+ *         description: Bad request error
+ *       401:
+ *         description: Unauthorized error
+ */
+groupRouter.post('/create', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const request = req as Request & { auth: { username: string; role: Role } };
+        const { username, role } = request.auth;
+        const { name, description } = req.body;
+
+        const newGroup = await groupService.createGroup(username, role, { name, description });
+        res.status(201).json(newGroup);
+    } catch (error) {
+        next(error);
+    }
+});
 
 export { groupRouter };

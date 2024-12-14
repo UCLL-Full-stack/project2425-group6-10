@@ -19,7 +19,7 @@ const getMessagesByGroup = async (
     }
 
     const groups = await groupDb.getGroupsByUsername(username);
-    if (!groups.find((group) => group.id === groupId)) {
+    if (!groups.find((group) => group.getId() === groupId)) {
         throw new Error('You are not a member of this group.');
     }
 

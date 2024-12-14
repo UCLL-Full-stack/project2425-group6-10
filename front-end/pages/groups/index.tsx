@@ -6,13 +6,18 @@ import { Group } from "@/types";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import UserService from "@/services/UserService";
+import CreateGroup from "@/components/groups/CreateGroup";
 
 const Groups: React.FC = () => {
   const [groups, setGroups] = useState<Array<Group>>([]);
   const [isUnauthorized, setIsUnauthorized] = useState<boolean>(false);
   const [groupCode, setGroupCode] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [loggedInUser, setLoggedInUser] = useState<{ username: string; role: string } | null>(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useState<{
+    username: string;
+    role: string;
+  } | null>(null);
 
   const fetchGroups = async () => {
     const response = await GroupService.getAllGroups();
@@ -36,7 +41,10 @@ const Groups: React.FC = () => {
       return;
     }
 
-    const response = await UserService.addGroupToUser(loggedInUser.username, groupCode);
+    const response = await UserService.addGroupToUser(
+      loggedInUser.username,
+      groupCode
+    );
 
     if (response.ok) {
       fetchGroups();
@@ -76,8 +84,33 @@ const Groups: React.FC = () => {
           isUnauthorized ? "opacity-50" : "opacity-100"
         }`}
       >
-        <h1 className="text-3xl font-bold mb-6">Groups</h1>
+        {loggedInUser?.role === "admin" ||
+          (loggedInUser?.role === "lecturer" && (
+            <>
+              <h1 className="text-3xl font-bold mb-6">Groups</h1>
+              <button
+                onClick={() => setShowCreateModal(true)}
+                className="bg-blue-500 text-white py-2 px-4 rounded mb-6"
+              >
+                Create Group
+              </button>
+            </>
+          ))}
 
+        {showCreateModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+            <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+              <h2 className="text-xl font-bold mb-4">Create a New Group</h2>
+              <CreateGroup onClose={() => setShowCreateModal(false)} />
+              <button
+                onClick={() => setShowCreateModal(false)}
+                className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+              >
+                X
+              </button>
+            </div>
+          </div>
+        )}
         {/* Show join group if role != admin */}
         {loggedInUser?.role !== "admin" && (
           <div className="mb-6">

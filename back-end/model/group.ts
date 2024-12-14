@@ -4,14 +4,14 @@ import { User } from './user';
 import { Message } from './message';
 
 export class Group {
-    readonly id?: number;
-    readonly name: string;
-    readonly description: string;
-    readonly code: string;
-    readonly messages: Message[];
+    private id?: number;
+    private name: string;
+    private description: string;
+    private code: string;
+    private messages: Message[];
 
     constructor(group: {
-        id: number;
+        id?: number;
         name: string;
         description: string;
         code?: string;
@@ -44,7 +44,11 @@ export class Group {
         return this.messages;
     }
 
-    validate(group: { id: number; name: string; description: string }) {
+    setCode(code: string) {
+        this.code = code;
+    }
+
+    validate(group: { name: string; description: string }) {
         if (!group.name?.trim()) {
             throw new Error('Name is required');
         }

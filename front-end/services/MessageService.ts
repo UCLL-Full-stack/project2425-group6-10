@@ -1,5 +1,3 @@
-import exp from "constants";
-
 const sendMessage = async (groupId: number, content: string) => {
   //const token = JSON.parse(localStorage.getItem("loggedInUser"))?.token;
   const storedUser = localStorage.getItem("loggedInUser");
