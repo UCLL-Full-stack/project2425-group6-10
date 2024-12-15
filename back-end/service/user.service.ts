@@ -4,8 +4,16 @@ import userDb from '../repository/user.db';
 import bcrypt from 'bcrypt';
 import { UserInput, AuthenticationResponse } from '../types';
 import { generateJwtToken } from '../util/jwt';
+import { Role } from '@prisma/client';
+import { UnauthorizedError } from 'express-jwt/dist/errors/UnauthorizedError';
 
-const getAllUsers = async (): Promise<User[]> => {
+const getAllUsers = async (role: Role): Promise<User[]> => {
+    if (role !== 'admin') {
+        throw new UnauthorizedError('credentials_required', {
+            message: 'You are not authorized to access this resource.',
+        });
+    }
+
     const users = await userDb.getAllUsers();
     return users;
 };
@@ -92,6 +100,25 @@ const authenticate = async ({ username, password }: UserInput): Promise<Authenti
     };
 };
 
+const updateUserRole = async (role: Role, username: string, newRole: Role): Promise<User> => {
+    if (role !== 'admin') {
+        throw new UnauthorizedError('credentials_required', {
+            message: 'You are not authorized to access this resource.',
+        });
+    }
+
+    if (!['admin', 'student', 'lecturer'].includes(newRole)) {
+        throw new Error('Invalid role provided.');
+    }
+
+    const userToUpdate = await userDb.getUserbyUsername(username);
+    if (!userToUpdate) {
+        throw new Error(`User with username ${username} not found.`);
+    }
+
+    return await userDb.updateUserRole(username, newRole);
+};
+
 export default {
     getAllUsers,
     getUserById,
@@ -99,4 +126,5 @@ export default {
     getUsersByGroupId,
     createUser,
     authenticate,
+    updateUserRole,
 };

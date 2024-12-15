@@ -1,5 +1,6 @@
 import { User } from '../model/user';
 import database from '../util/database';
+import { Role } from '@prisma/client';
 
 const getAllUsers = async (): Promise<User[]> => {
     try {
@@ -109,6 +110,20 @@ const getUserbyEmail = async (email: string): Promise<User | null> => {
     }
 };
 
+const updateUserRole = async (username: string, role: Role): Promise<User> => {
+    try {
+        const updatedUser = await database.user.update({
+            where: { username: username },
+            data: { role },
+            include: { groups: true, messages: true },
+        });
+        return User.from(updatedUser);
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
+
 export default {
     getAllUsers,
     getUserById,
@@ -117,4 +132,5 @@ export default {
     createUser,
     getUserbyUsername,
     getUserbyEmail,
+    updateUserRole,
 };

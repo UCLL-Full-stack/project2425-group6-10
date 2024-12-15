@@ -54,6 +54,7 @@ import userService from '../service/user.service';
 import { User } from '@prisma/client';
 import { UserInput } from '../types';
 import { parseISOWithOptions } from 'date-fns/fp';
+import { Role } from '@prisma/client';
 
 const userRouter = express.Router();
 
@@ -76,7 +77,10 @@ const userRouter = express.Router();
  */
 userRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const users = await userService.getAllUsers();
+        const request = req as Request & { auth: { username: string; role: Role } };
+        const { role } = request.auth;
+
+        const users = await userService.getAllUsers(role);
         res.status(200).json(users);
     } catch (error) {
         next(error);
@@ -242,4 +246,20 @@ userRouter.post('/login', async (req: Request, res: Response, next: NextFunction
         next(error);
     }
 });
+
+userRouter.put('/:username/role', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const request = req as Request & { auth: { username: string; role: Role } };
+        const { role } = request.auth;
+
+        const { username } = req.params;
+        const { newRole } = req.body;
+
+        const updatedUser = await userService.updateUserRole(role, username, newRole);
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        next(error);
+    }
+});
+
 export { userRouter };
