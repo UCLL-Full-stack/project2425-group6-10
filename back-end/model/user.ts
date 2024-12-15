@@ -5,11 +5,11 @@ import { Group } from './group';
 import { Message } from './message';
 
 export class User {
-    readonly id?: number;
-    readonly username: string;
-    readonly email: string;
-    readonly password: string;
-    readonly role: Role;
+    private id?: number;
+    private username: string;
+    private email: string;
+    private password: string;
+    private role: Role;
 
     constructor(user: {
         id?: number;

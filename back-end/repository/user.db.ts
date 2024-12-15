@@ -65,14 +65,14 @@ const getUsersByGroupId = async (groupId: number): Promise<User[]> => {
     }
 };
 
-const createUser = async ({ username, password, email, role }: User): Promise<User> => {
+const createUser = async (user: User): Promise<User> => {
     try {
         const userPrisma = await database.user.create({
             data: {
-                username,
-                password,
-                email,
-                role,
+                username: user.getUsername(),
+                password: user.getPassword(),
+                email: user.getEmail(),
+                role: user.getRole(),
             },
             include: { groups: true, messages: true },
         });

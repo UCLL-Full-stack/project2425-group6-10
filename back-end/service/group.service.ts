@@ -49,7 +49,7 @@ const createGroup = async (
         if (!lecturer) {
             throw new Error('User not found');
         }
-        lecturerId = lecturer.id;
+        lecturerId = lecturer.getId();
     }
 
     return await groupDb.createGroup(newGroup, lecturerId);
