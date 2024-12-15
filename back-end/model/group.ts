@@ -8,21 +8,13 @@ export class Group {
     private name: string;
     private description: string;
     private code: string;
-    private messages: Message[];
 
-    constructor(group: {
-        id?: number;
-        name: string;
-        description: string;
-        code?: string;
-        messages?: Message[];
-    }) {
+    constructor(group: { id?: number; name: string; description: string; code?: string }) {
         this.validate(group);
         this.id = group.id;
         this.name = group.name;
         this.description = group.description;
         this.code = group.code || this.generateCode();
-        this.messages = group.messages || [];
     }
 
     getId(): number | undefined {
@@ -39,9 +31,6 @@ export class Group {
 
     getCode(): string {
         return this.code;
-    }
-    getMessages(): Message[] {
-        return this.messages;
     }
 
     setCode(code: string) {
@@ -71,7 +60,6 @@ export class Group {
             name,
             description,
             code,
-            messages: [],
         });
     }
 }

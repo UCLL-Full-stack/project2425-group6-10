@@ -13,7 +13,6 @@ export type UserInput = {
     email?: string;
     role?: string;
     password?: string;
-    groups?: GroupInput[];
 };
 
 export type AuthenticationResponse = {

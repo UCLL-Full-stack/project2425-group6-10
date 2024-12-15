@@ -10,8 +10,6 @@ export class User {
     readonly email: string;
     readonly password: string;
     readonly role: Role;
-    readonly groups: Group[];
-    readonly messages: Message[];
 
     constructor(user: {
         id?: number;
@@ -19,8 +17,6 @@ export class User {
         email: string;
         password: string;
         role: Role;
-        groups: Group[];
-        messages: Message[];
     }) {
         this.validate(user);
         this.id = user.id;
@@ -28,8 +24,6 @@ export class User {
         this.email = user.email;
         this.password = user.password;
         this.role = user.role;
-        this.groups = user.groups;
-        this.messages = user.messages;
     }
 
     getId(): number | undefined {
@@ -87,8 +81,6 @@ export class User {
         password,
         email,
         role,
-        groups,
-        messages,
     }: UserPrisma & { groups: GroupPrisma[]; messages: MessagePrisma[] }) {
         return new User({
             id,
@@ -96,8 +88,6 @@ export class User {
             password,
             email,
             role: role as Role,
-            groups: groups.map((group) => Group.from(group)),
-            messages: messages.map((message) => Message.from(message)),
         });
     }
 }

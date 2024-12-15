@@ -14,8 +14,6 @@ const users = [
         email: 'john.doe@gmail.com',
         password: 'John1234',
         role: 'student',
-        groups: [],
-        messages: [],
     }),
     new User({
         id: 2,
@@ -23,8 +21,6 @@ const users = [
         email: 'jane.doe@gmail.com',
         password: 'Jane1234',
         role: 'lecturer',
-        groups: [],
-        messages: [],
     }),
 ];
 
@@ -187,8 +183,6 @@ test('given: username email password, when: creating user, then: user is created
         email: userInput.email,
         password: hashedPassword,
         role: 'student',
-        groups: [],
-        messages: [],
     });
 
     const mockGetUserByUsername = jest.fn().mockResolvedValue(null);
@@ -214,7 +208,6 @@ test('given: username email password, when: creating user, then: user is created
             email: userInput.email,
             password: hashedPassword,
             role: 'student',
-            groups: [],
         })
     );
 
@@ -279,8 +272,6 @@ test('given: valid username and password, when: authenticating, then: authentica
         email: 'john.doe@gmail.com',
         password: hashedPassword,
         role: 'student',
-        groups: [],
-        messages: [],
     });
 
     mockUserDbGetUserByUsername.mockResolvedValue(user);
@@ -351,8 +342,6 @@ test('given: incorrect password, when: authenticating, then: error is thrown', a
         email: 'john.doe@gmail.com',
         password: 'hashedPassword',
         role: 'student',
-        groups: [],
-        messages: [],
     });
 
     const mockGetUserByUsername = jest.fn().mockResolvedValue(user);

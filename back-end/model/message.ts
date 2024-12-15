@@ -7,13 +7,11 @@ export class Message {
     private id?: number;
     private content: string;
     private date: string;
-    private group?: Group;
     private user?: { id: number; username: string };
 
     constructor(message: {
         id?: number;
         content: string;
-        group?: Group;
         user?: { id: number; username: string };
         date?: string;
     }) {
@@ -21,7 +19,6 @@ export class Message {
         this.id = message.id;
         this.content = message.content;
         this.date = message.date ? message.date : this.formatDate(new Date());
-        this.group = message.group;
         this.user = message.user;
     }
 
@@ -35,10 +32,6 @@ export class Message {
 
     getDate(): string {
         return this.date;
-    }
-
-    getGroup(): Group | undefined {
-        return this.group;
     }
 
     getUser(): { id: number; username: string } | undefined {
@@ -64,14 +57,12 @@ export class Message {
     static from({
         id,
         content,
-        group,
         user,
         date,
-    }: MessagePrisma & { group?: Group; user?: { id: number; username: string }; date?: string }) {
+    }: MessagePrisma & { user?: { id: number; username: string }; date?: string }) {
         return new Message({
             id,
             content,
-            group,
             user,
             date,
         });

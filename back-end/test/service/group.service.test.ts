@@ -22,8 +22,6 @@ const user = new User({
     email: 'john.doe@gmail.com',
     password: 'John1234',
     role: 'student',
-    groups: [],
-    messages: [],
 });
 const lecturer = new User({
     id: 1,
@@ -31,8 +29,6 @@ const lecturer = new User({
     email: 'john.doe@gmail.com',
     password: 'John1234',
     role: 'lecturer',
-    groups: [],
-    messages: [],
 });
 let mockGroupDbGetAllGroups: jest.Mock;
 let mockGroupDbGetGroupsByUsername: jest.Mock;
