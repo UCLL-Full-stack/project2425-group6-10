@@ -56,11 +56,45 @@ const addGroupToUser = async (username: string, groupCode: string) => {
   });
 };
 
+const getAllUsers = async () => {
+  //const token = JSON.parse(localStorage.getItem("loggedInUser"))?.token;
+  const storedUser = localStorage.getItem("loggedInUser");
+  const token = storedUser ? JSON.parse(storedUser).token : null;
+
+  return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+};
+
+const updateUserRole = async (username: string, newRole: string) => {
+  //const token = JSON.parse(localStorage.getItem("loggedInUser"))?.token;
+  const storedUser = localStorage.getItem("loggedInUser");
+  const token = storedUser ? JSON.parse(storedUser).token : null;
+
+  return await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/users/${username}/role`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ newRole }),
+    }
+  );
+};
+
 const UserService = {
   getUsersByGroup,
   loginUser,
   signupUser,
   addGroupToUser,
+  getAllUsers,
+  updateUserRole,
 };
 
 export default UserService;
