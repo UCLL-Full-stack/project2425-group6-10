@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { User } from '@/types';
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { User } from "@/types";
 
 const Header: React.FC = () => {
   const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('loggedInUser');
+    const storedUser = localStorage.getItem("loggedInUser");
     if (storedUser) {
       setLoggedInUser(JSON.parse(storedUser));
     }
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('loggedInUser');
+    localStorage.removeItem("loggedInUser");
     setLoggedInUser(null);
 
     window.location.reload();
@@ -30,19 +30,32 @@ const Header: React.FC = () => {
         </div>
 
         <ul className="flex items-center space-x-4">
-        {/* Navigation */}
-        {loggedInUser && (
-          <>
-            <li>
-              <Link
-                href="/groups"
-                className="px-4 py-2 rounded-lg font-semibold hover:bg-white hover:text-purple-500 transition-all"
-              >
-                Groups
-              </Link>
-            </li>
-          </>
-        )}
+          {/* User Overview */}
+          {loggedInUser && loggedInUser.role === "admin" && (
+            <>
+              <li>
+                <Link
+                  href="/users"
+                  className="px-4 py-2 rounded-lg font-semibold hover:bg-white hover:text-purple-500 transition-all"
+                >
+                  User Overview
+                </Link>
+              </li>
+            </>
+          )}
+          {/* Navigation */}
+          {loggedInUser && (
+            <>
+              <li>
+                <Link
+                  href="/groups"
+                  className="px-4 py-2 rounded-lg font-semibold hover:bg-white hover:text-purple-500 transition-all"
+                >
+                  Groups
+                </Link>
+              </li>
+            </>
+          )}
           {/* User */}
           {!loggedInUser && (
             <>
