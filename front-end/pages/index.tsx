@@ -19,16 +19,17 @@ export default function Home() {
             Welcome to <span className="text-indigo-600">CampusChat</span>
           </h1>
           <p className="mt-6 text-lg text-gray-600">
-            Your go-to platform for seamless communication, collaboration, and connection.
+            Your go-to platform for seamless communication, collaboration, and
+            connection.
           </p>
 
           <div className="mt-12 flex justify-center">
             <Image
               className="rounded-lg shadow-lg"
-              src="/logo.jpg"
-              width={300}
+              src="/campuschatbanner.webp"
+              width={533}
               height={300}
-              alt="Campus Chat Logo"
+              alt="Campus Chat Banner"
             />
           </div>
 
