@@ -3,12 +3,14 @@ import bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
 
 const prisma = new PrismaClient();
+
 const resetSequences = async () => {
     await prisma.$executeRaw`ALTER SEQUENCE "User_id_seq" RESTART WITH 1;`;
     await prisma.$executeRaw`ALTER SEQUENCE "Group_id_seq" RESTART WITH 1;`;
     await prisma.$executeRaw`ALTER SEQUENCE "Message_id_seq" RESTART WITH 1;`;
     await prisma.$executeRaw`ALTER SEQUENCE "Report_id_seq" RESTART WITH 1;`;
 };
+
 const generateUniqueCode = async (): Promise<string> => {
     let code: string = '';
     let isUnique = false;
@@ -28,8 +30,8 @@ const generateUniqueCode = async (): Promise<string> => {
 };
 
 const main = async () => {
-    await prisma.message.deleteMany();
     await prisma.report.deleteMany();
+    await prisma.message.deleteMany();
     await prisma.group.deleteMany();
     await prisma.user.deleteMany();
     await resetSequences();
@@ -73,6 +75,7 @@ const main = async () => {
             code: await generateUniqueCode(),
         },
     });
+
     const admin = await prisma.user.create({
         data: {
             username: 'admin',
@@ -123,17 +126,6 @@ const main = async () => {
             groups: {
                 connect: [{ id: computerScienceGroup.id }, { id: engineeringGroup.id }],
             },
-        },
-    });
-    const report1 = await prisma.report.create({
-        data: {
-            description: 'Unappropriate content.',
-        },
-    });
-
-    const report2 = await prisma.report.create({
-        data: {
-            description: 'Spam content.',
         },
     });
 
@@ -215,6 +207,16 @@ const main = async () => {
             groupId: engineeringGroup.id,
             userId: lecturer.id,
         },
+        {
+            content: 'Spam message: Buy followers now at a low price!',
+            groupId: marketingGroup.id,
+            userId: student2.id,
+        },
+        {
+            content: 'Offensive comment: This project is stupid and everyone here is dumb.',
+            groupId: computerScienceGroup.id,
+            userId: lecturer.id,
+        },
     ];
 
     for (const message of messages) {
@@ -224,6 +226,30 @@ const main = async () => {
                 groupId: message.groupId,
                 userId: message.userId,
             },
+        });
+    }
+
+    const inappropriateMessages = await prisma.message.findMany({
+        where: {
+            content: {
+                in: [
+                    'Spam message: Buy followers now at a low price!',
+                    'Offensive comment: This project is stupid and everyone here is dumb.',
+                ],
+            },
+        },
+    });
+
+    if (inappropriateMessages.length > 0) {
+        await prisma.report.createMany({
+            data: inappropriateMessages.map((message, index) => ({
+                description:
+                    index === 0
+                        ? 'Spam detected in the message.'
+                        : 'Offensive language used in the message.',
+                messageId: message.id,
+                userId: student1.id, // Assume JohnDoe reports these messages
+            })),
         });
     }
 };

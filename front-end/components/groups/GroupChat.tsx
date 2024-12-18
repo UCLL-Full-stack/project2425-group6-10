@@ -4,6 +4,7 @@ import GroupService from "@/services/GroupService";
 import UnauthorizedAccess from "@/components/users/UnauthorizedAccess";
 import NoAccess from "@/components/groups/NoAccess";
 import MessageService from "@/services/MessageService";
+import ReportModal from "../reports/ReportModal";
 
 type Props = {
   groupId: number;
@@ -16,6 +17,11 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
   const [isUnauthorized, setIsUnauthorized] = useState(false);
   const [noAccess, setNoAccess] = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const [showReportModal, setShowReportModal] = useState<boolean>(false);
+  const [selectedMessageId, setSelectedMessageId] = useState<number | null>(
+    null
+  );
+
   const [loggedInUser, setLoggedInUser] = useState<{ username: string } | null>(
     null
   );
@@ -51,7 +57,8 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
           if (
             newMessages.length !== prevMessages.length ||
             !newMessages.every(
-              (msg: Message, index: number) => msg.id === prevMessages[index]?.id
+              (msg: Message, index: number) =>
+                msg.id === prevMessages[index]?.id
             )
           ) {
             //console.log("Messages updated:", newMessages);
@@ -108,6 +115,15 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
     if (e.key === "Enter") {
       handleSendMessage();
     }
+  };
+  const openReportModal = (messageId: number) => {
+    setSelectedMessageId(messageId);
+    setShowReportModal(true);
+  };
+
+  const closeReportModal = () => {
+    setShowReportModal(false);
+    setSelectedMessageId(null);
   };
 
   useEffect(() => {
@@ -166,12 +182,24 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
           return (
             <div
               key={message.id}
-              className={`p-4 rounded-lg shadow-sm ${
+              className={`relative p-4 rounded-lg shadow-sm ${
                 isUserMessage
                   ? "bg-indigo-100 text-indigo-900 self-end"
                   : "bg-gray-100 text-gray-800"
               }`}
             >
+              {/* Report button in the upper-right corner */}
+              {!isUserMessage && (
+                <button
+                  onClick={() =>
+                    message.id !== undefined && openReportModal(message.id)
+                  }
+                  className="absolute top-2 right-2 text-indigo-600 hover:text-indigo-800"
+                >
+                  Report
+                </button>
+              )}
+
               <p className="text-sm font-semibold">
                 {message.user?.username || "Unknown User"}
               </p>
@@ -213,6 +241,9 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
           {isSending ? "Sending..." : "Send"}
         </button>
       </div>
+      {showReportModal && selectedMessageId && (
+        <ReportModal messageId={selectedMessageId} onClose={closeReportModal} />
+      )}
     </div>
   );
 };

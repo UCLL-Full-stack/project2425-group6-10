@@ -64,7 +64,7 @@ afterEach(() => {
 test('given: list of users, when getAllUsers, then: list of users is returned', () => {
     userDb.getAllUsers = mockUserDbGetAllUsers.mockReturnValue(users);
 
-    userService.getAllUsers();
+    userService.getAllUsers('admin');
 
     expect(mockUserDbGetAllUsers).toHaveBeenCalledTimes(1);
     expect(mockUserDbGetAllUsers).toHaveReturnedWith(users);

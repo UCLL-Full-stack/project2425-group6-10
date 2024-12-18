@@ -5,11 +5,11 @@ export class Report {
     private description: string;
     private date: string;
 
-    constructor(report: { id?: number; description: string }) {
+    constructor(report: { id?: number; description: string; date?: string }) {
         this.validate(report);
         this.id = report.id;
         this.description = report.description;
-        this.date = this.formatDate(new Date());
+        this.date = report.date ? report.date : this.formatDate(new Date());
     }
 
     getId(): number | undefined {
@@ -40,10 +40,11 @@ export class Report {
         return `${day}/${month}/${year} ${hours}:${minutes}`;
     }
 
-    static from({ id, description }: ReportPrisma) {
+    static from({ id, description, date }: ReportPrisma) {
         return new Report({
             id,
             description,
+            date,
         });
     }
 }

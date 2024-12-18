@@ -11,6 +11,21 @@ const getAllMessages = async (): Promise<Message[]> => {
     }
 };
 
+const getMessageById = async (messageId: number): Promise<Message | null> => {
+    try {
+        const messagePrisma = await database.message.findUnique({
+            where: {
+                id: messageId,
+            },
+        });
+
+        return messagePrisma ? Message.from(messagePrisma) : null;
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
+
 const getMessagesByGroup = async (groupId: number): Promise<Message[]> => {
     try {
         const messagesPrisma = await database.message.findMany({
@@ -62,8 +77,10 @@ const sendMessage = async (userId: number, groupId: number, content: string): Pr
         throw new Error('Database error. See server log for details.');
     }
 };
+
 export default {
     getAllMessages,
     getMessagesByGroup,
     sendMessage,
+    getMessageById,
 };

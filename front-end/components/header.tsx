@@ -41,6 +41,14 @@ const Header: React.FC = () => {
                   User Overview
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/reports"
+                  className="px-4 py-2 rounded-lg font-semibold hover:bg-white hover:text-purple-500 transition-all"
+                >
+                  Report Overview
+                </Link>
+              </li>
             </>
           )}
           {/* Navigation */}
