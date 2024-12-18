@@ -208,12 +208,12 @@ const main = async () => {
             userId: lecturer.id,
         },
         {
-            content: 'Spam message: Buy followers now at a low price!',
+            content: 'Buy followers now at a low price!',
             groupId: marketingGroup.id,
             userId: student2.id,
         },
         {
-            content: 'Offensive comment: This project is stupid and everyone here is dumb.',
+            content: 'This project is stupid and everyone here is dumb.',
             groupId: computerScienceGroup.id,
             userId: lecturer.id,
         },
