@@ -27,6 +27,21 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
   );
   const messageEndRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    // Load draft message from localStorage
+    const draftMessage = localStorage.getItem(`draftMessage_group_${groupId}`);
+    if (draftMessage) {
+      setNewMessage(draftMessage);
+    }
+  }, [groupId]);
+
+  useEffect(() => {
+    // Save draft message to localStorage
+    if (newMessage.trim() !== "") {
+      localStorage.setItem(`draftMessage_group_${groupId}`, newMessage);
+    }
+  }, [newMessage, groupId]);
+
   const fetchGroupDetails = async () => {
     try {
       const groupDetails = await GroupService.getGroupById(groupId);
@@ -103,6 +118,7 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
           },
         ]);
         setNewMessage("");
+        localStorage.removeItem(`draftMessage_group_${groupId}`);
       }
     } catch (error) {
       console.error("Error sending message:", error);
