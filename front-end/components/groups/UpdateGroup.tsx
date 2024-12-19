@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Group } from "@/types";
+import { useTranslation } from "next-i18next";
 
 type Props = {
   group: Group;
@@ -12,6 +13,7 @@ type Props = {
 };
 
 const EditGroupModal: React.FC<Props> = ({ group, onClose, onUpdate }) => {
+  const { t } = useTranslation();
   const [name, setName] = useState(group.name);
   const [description, setDescription] = useState(group.description);
   const [regenerateCode, setRegenerateCode] = useState(false);
@@ -26,7 +28,7 @@ const EditGroupModal: React.FC<Props> = ({ group, onClose, onUpdate }) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-lg p-8 relative">
         <h2 className="text-2xl font-bold text-center text-indigo-700 mb-6">
-          Edit Group
+          {t("editGroup.editGroup")}
         </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -34,7 +36,7 @@ const EditGroupModal: React.FC<Props> = ({ group, onClose, onUpdate }) => {
               htmlFor="name"
               className="block text-sm font-medium text-gray-700"
             >
-              Group Name
+              {t("editGroup.groupName")}
             </label>
             <input
               type="text"
@@ -50,7 +52,7 @@ const EditGroupModal: React.FC<Props> = ({ group, onClose, onUpdate }) => {
               htmlFor="description"
               className="block text-sm font-medium text-gray-700"
             >
-              Group Description
+              {t("editGroup.groupDescription")}
             </label>
             <textarea
               id="description"
@@ -73,14 +75,14 @@ const EditGroupModal: React.FC<Props> = ({ group, onClose, onUpdate }) => {
                 onChange={() => setRegenerateCode(!regenerateCode)}
                 className="mr-2"
               />
-              Regenerate Code
+              {t("editGroup.regenerateCode")}
             </label>
           </div>
           <button
             type="submit"
             className="w-full py-2 px-4 text-white bg-blue-500 rounded-md"
           >
-            Update Group
+            {t("editGroup.updateGroup")}
           </button>
         </form>
         <button

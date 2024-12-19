@@ -1,12 +1,15 @@
 import Header from "@/components/header";
 import UserSignupForm from "@/components/users/UserSignupForm";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Head from "next/head";
 
 const Signup: React.FC = () => {
+  const { t } = useTranslation();
   return (
     <>
       <Head>
-        <title>User Signup</title>
+        <title>{t("signup.title")}</title>
         <meta name="description" content="Sign up for CampusChat." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
@@ -16,6 +19,15 @@ const Signup: React.FC = () => {
       </main>
     </>
   );
+};
+export const getServerSideProps = async (context: { locale: any }) => {
+  const { locale } = context;
+
+  return {
+    props: {
+      ...(await serverSideTranslations(locale ?? "en", ["common"])),
+    },
+  };
 };
 
 export default Signup;

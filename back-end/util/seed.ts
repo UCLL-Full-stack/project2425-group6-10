@@ -12,7 +12,7 @@ const resetSequences = async () => {
 };
 
 const generateUniqueCode = async (): Promise<string> => {
-    let code: string = '';
+    let code = '';
     let isUnique = false;
 
     while (!isUnique) {
@@ -220,37 +220,31 @@ const main = async () => {
     ];
 
     for (const message of messages) {
-        await prisma.message.create({
+        const createdMessage = await prisma.message.create({
             data: {
                 content: message.content,
                 groupId: message.groupId,
                 userId: message.userId,
             },
         });
-    }
 
-    const inappropriateMessages = await prisma.message.findMany({
-        where: {
-            content: {
-                in: [
-                    'Spam message: Buy followers now at a low price!',
-                    'Offensive comment: This project is stupid and everyone here is dumb.',
-                ],
-            },
-        },
-    });
-
-    if (inappropriateMessages.length > 0) {
-        await prisma.report.createMany({
-            data: inappropriateMessages.map((message, index) => ({
-                description:
-                    index === 0
-                        ? 'Spam detected in the message.'
-                        : 'Offensive language used in the message.',
-                messageId: message.id,
-                userId: student1.id, // Assume JohnDoe reports these messages
-            })),
-        });
+        if (message.content === 'Buy followers now at a low price!') {
+            await prisma.report.create({
+                data: {
+                    description: 'Spam detected in the message.',
+                    messageId: createdMessage.id,
+                    userId: student1.id,
+                },
+            });
+        } else if (message.content === 'This project is stupid and everyone here is dumb.') {
+            await prisma.report.create({
+                data: {
+                    description: 'Offensive language used in the message.',
+                    messageId: createdMessage.id,
+                    userId: student1.id,
+                },
+            });
+        }
     }
 };
 

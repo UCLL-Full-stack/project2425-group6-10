@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import UserService from "@/services/UserService";
 import UnauthorizedAccess from "@/components/users/UnauthorizedAccess";
 import { User } from "@/types";
+import { useTranslation } from "next-i18next"; // Import the translation hook
 
 const UserOverview: React.FC = () => {
+  const { t } = useTranslation(); // Hook to access translations
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -55,7 +57,7 @@ const UserOverview: React.FC = () => {
           )
         );
       } else {
-        alert("Failed to update role");
+        alert(t("userOverview.failedUpdate"));
       }
     } catch (error) {
       console.error("Error updating user role:", error);
@@ -104,34 +106,34 @@ const UserOverview: React.FC = () => {
   }
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <p>{t("userOverview.loading")}</p>;
   }
 
   return (
     <div className="flex flex-col bg-white shadow-lg rounded-lg p-6">
-      <h1 className="text-4xl font-bold text-indigo-600 mb-6">User Overview</h1>
-      {/* Search and Filter */}
+      <h1 className="text-4xl font-bold text-indigo-600 mb-6">
+        {t("userOverview.title")}
+      </h1>
       <div className="flex items-center justify-between mb-6">
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search by username or email..."
+          placeholder={t("userOverview.searchPlaceholder")}
           className="flex-1 px-4 py-2 border rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
         <button
           onClick={() => setIsFilterOpen(true)}
           className="ml-4 px-4 py-2 bg-indigo-500 text-white rounded-lg shadow hover:bg-indigo-600"
         >
-          Filter Roles
+          {t("userOverview.filterRoles")}
         </button>
       </div>
-      {/* Filter Modal */}
       {isFilterOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
           <div className="bg-white rounded-lg shadow-lg w-96 p-6">
             <h2 className="text-2xl font-bold text-gray-700 mb-4">
-              Filter Roles
+              {t("userOverview.filterRolesTitle")}
             </h2>
             <div className="space-y-3">
               {["student", "lecturer", "admin"].map((role) => (
@@ -152,7 +154,7 @@ const UserOverview: React.FC = () => {
                     className="mr-2"
                   />
                   <label htmlFor={role} className="text-gray-700 capitalize">
-                    {role}
+                    {t(`userOverview.${role}`)}
                   </label>
                 </div>
               ))}
@@ -162,7 +164,7 @@ const UserOverview: React.FC = () => {
                 onClick={() => setIsFilterOpen(false)}
                 className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
               >
-                Close
+                {t("userOverview.close")}
               </button>
               <button
                 onClick={() => {
@@ -171,30 +173,29 @@ const UserOverview: React.FC = () => {
                 }}
                 className="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600"
               >
-                Apply
+                {t("userOverview.apply")}
               </button>
             </div>
           </div>
         </div>
       )}
-      {/* Confirmation Modal */}
       {isConfirmationOpen && selfRoleChange && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
           <div className="bg-white rounded-lg shadow-lg w-96 p-6">
-            <h2 className="text-2xl font-bold text-red-700 mb-4">Warning</h2>
+            <h2 className="text-2xl font-bold text-red-700 mb-4">
+              {t("userOverview.warning")}
+            </h2>
             <p className="text-gray-700 mb-4">
-              You are about to change your own role to{" "}
-              <span className="font-bold capitalize">
-                {selfRoleChange.newRole}
-              </span>
-              . This might limit your access. Are you sure?
+              {t("userOverview.roleChangeWarning", {
+                newRole: selfRoleChange.newRole,
+              })}
             </p>
             <div className="mt-6 flex justify-end space-x-4">
               <button
                 onClick={() => setIsConfirmationOpen(false)}
                 className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
               >
-                Cancel
+                {t("userOverview.cancel")}
               </button>
               <button
                 onClick={() => {
@@ -203,7 +204,7 @@ const UserOverview: React.FC = () => {
                 }}
                 className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
               >
-                Confirm
+                {t("userOverview.confirm")}
               </button>
             </div>
           </div>
@@ -214,9 +215,15 @@ const UserOverview: React.FC = () => {
         <table className="min-w-full bg-gray-50">
           <thead className="bg-indigo-100 text-indigo-700 sticky top-0">
             <tr>
-              <th className="px-6 py-3 text-left font-semibold">Username</th>
-              <th className="px-6 py-3 text-left font-semibold">Email</th>
-              <th className="px-6 py-3 text-left font-semibold">Role</th>
+              <th className="px-6 py-3 text-left font-semibold">
+                {t("userOverview.username")}
+              </th>
+              <th className="px-6 py-3 text-left font-semibold">
+                {t("userOverview.email")}
+              </th>
+              <th className="px-6 py-3 text-left font-semibold">
+                {t("userOverview.role")}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -232,9 +239,11 @@ const UserOverview: React.FC = () => {
                       handleRoleChange(user.username!, e.target.value)
                     }
                   >
-                    <option value="student">Student</option>
-                    <option value="lecturer">Lecturer</option>
-                    <option value="admin">Admin</option>
+                    <option value="student">{t("userOverview.student")}</option>
+                    <option value="lecturer">
+                      {t("userOverview.lecturer")}
+                    </option>
+                    <option value="admin">{t("userOverview.admin")}</option>
                   </select>
                 </td>
               </tr>
@@ -243,7 +252,7 @@ const UserOverview: React.FC = () => {
         </table>
         {filteredUsers.length === 0 && (
           <p className="text-center text-gray-600 mt-4">
-            No users found matching the criteria.
+            {t("userOverview.noUsersFound")}
           </p>
         )}
       </div>

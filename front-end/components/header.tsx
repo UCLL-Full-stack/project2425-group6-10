@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { User } from "@/types";
+import Language from "./language/Language";
+import { useTranslation } from "next-i18next";
 
 const Header: React.FC = () => {
   const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const storedUser = localStorage.getItem("loggedInUser");
@@ -22,15 +25,13 @@ const Header: React.FC = () => {
   return (
     <header className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white shadow-lg">
       <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
-        {/* Logo eventueel nog */}
         <div className="text-2xl font-extrabold tracking-wide">
           <Link href="/" className="hover:opacity-90 transition-opacity">
-            CampusChat
+            {t("header.logo")}
           </Link>
         </div>
 
         <ul className="flex items-center space-x-4">
-          {/* User Overview */}
           {loggedInUser && loggedInUser.role === "admin" && (
             <>
               <li>
@@ -38,7 +39,7 @@ const Header: React.FC = () => {
                   href="/users"
                   className="px-4 py-2 rounded-lg font-semibold hover:bg-white hover:text-purple-500 transition-all"
                 >
-                  User Overview
+                  {t("header.admin.userOverview")}
                 </Link>
               </li>
               <li>
@@ -46,12 +47,11 @@ const Header: React.FC = () => {
                   href="/reports"
                   className="px-4 py-2 rounded-lg font-semibold hover:bg-white hover:text-purple-500 transition-all"
                 >
-                  Report Overview
+                  {t("header.admin.reportOverview")}
                 </Link>
               </li>
             </>
           )}
-          {/* Navigation */}
           {loggedInUser && (
             <>
               <li>
@@ -59,12 +59,11 @@ const Header: React.FC = () => {
                   href="/groups"
                   className="px-4 py-2 rounded-lg font-semibold hover:bg-white hover:text-purple-500 transition-all"
                 >
-                  Groups
+                  {t("header.groups")}
                 </Link>
               </li>
             </>
           )}
-          {/* User */}
           {!loggedInUser && (
             <>
               <li>
@@ -72,7 +71,7 @@ const Header: React.FC = () => {
                   href="/signup"
                   className="px-4 py-2 bg-white text-indigo-500 font-semibold rounded-lg shadow hover:shadow-lg hover:bg-indigo-100 transition-all"
                 >
-                  Signup
+                  {t("header.guest.signup")}
                 </Link>
               </li>
               <li>
@@ -80,7 +79,7 @@ const Header: React.FC = () => {
                   href="/login"
                   className="px-4 py-2 bg-purple-600 font-semibold rounded-lg shadow hover:shadow-lg hover:bg-purple-700 transition-all"
                 >
-                  Login
+                  {t("header.guest.login")}
                 </Link>
               </li>
             </>
@@ -92,7 +91,7 @@ const Header: React.FC = () => {
                   onClick={handleLogout}
                   className="px-4 py-2 bg-red-500 font-semibold rounded-lg shadow hover:shadow-lg hover:bg-red-600 transition-all"
                 >
-                  Logout
+                  {t("header.logout")}
                 </button>
               </li>
               <li>
@@ -102,6 +101,7 @@ const Header: React.FC = () => {
               </li>
             </>
           )}
+          <Language />
         </ul>
       </nav>
     </header>

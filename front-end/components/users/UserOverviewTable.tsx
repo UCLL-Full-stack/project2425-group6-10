@@ -1,18 +1,21 @@
 import { User } from "@/types";
+import { useTranslation } from "next-i18next";
 
 type Props = {
   users: Array<User>;
 };
 
 const UserOverviewTable: React.FC<Props> = ({ users }) => {
+  const { t } = useTranslation();
+
   return (
     <>
       <table className="users-table">
         <thead className="users-table-header">
           <tr>
-            <th className="users-header-cell">Name</th>
-            <th className="users-header-cell">Email</th>
-            <th className="users-header-cell">Role</th>
+            <th className="users-header-cell">{t("userOverview.name")}</th>
+            <th className="users-header-cell">{t("userOverview.email")}</th>
+            <th className="users-header-cell">{t("userOverview.role")}</th>
           </tr>
         </thead>
         <tbody>

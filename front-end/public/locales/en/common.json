@@ -1,0 +1,200 @@
+{
+  "login": {
+    "title": "User Login",
+    "labels": {
+      "username": "Username",
+      "password": "Password"
+    },
+    "placeholders": {
+      "username": "Enter your username",
+      "password": "Enter your password"
+    },
+    "buttons": {
+      "submit": "Login"
+    },
+    "noAccount": "Don't have an account?",
+    "signupLink": "Sign up",
+    "success": "Login successful. Redirecting to homepage...",
+    "errors": {
+      "nameRequired": "Name is required.",
+      "passwordRequired": "Password is required.",
+      "generalError": "General error. Please try again later."
+    }
+  },
+  "header": {
+    "logo": "CampusChat",
+    "admin": {
+      "userOverview": "User Overview",
+      "reportOverview": "Report Overview"
+    },
+    "groups": "Groups",
+    "guest": {
+      "signup": "Signup",
+      "login": "Login"
+    },
+    "logout": "Logout"
+  },
+  "language": "Language",
+  "signup": {
+    "title": "Sign Up",
+    "fields": {
+      "username": "Username",
+      "email": "Email",
+      "password": "Password"
+    },
+    "placeholders": {
+      "username": "Enter your username",
+      "email": "Enter your email",
+      "password": "Enter your password"
+    },
+    "errors": {
+      "nameRequired": "Name is required.",
+      "emailRequired": "Email is required.",
+      "passwordRequired": "Password is required.",
+      "general": "General error. Please try again later."
+    },
+    "success": "Signup successful. Redirecting to login...",
+    "submit": "Sign Up",
+    "footer": {
+      "text": "Already have an account?",
+      "link": "Login"
+    }
+  },
+  "unauthorized": {
+    "title": "Unauthorized Access",
+    "message": "You need to log in to access this page. Please click the button below to log in."
+  },
+  "home": {
+    "meta": {
+      "description": "CampusChat home page."
+    },
+    "welcome": {
+      "title": "Welcome to",
+      "subtitle": "Your go-to platform for seamless communication, collaboration, and connection."
+    },
+    "brand": "CampusChat",
+    "banner": {
+      "alt": "Campus Chat Banner"
+    },
+    "cta": {
+      "getStarted": "Get Started",
+      "exploreGroups": "Explore Groups"
+    }
+  },
+  "users": {
+    "pageTitle": "User Overview"
+  },
+  "reports": {
+    "pageTitle": "Reports Overview",
+    "pageDescription": "Overview of reports.",
+    "pageHeading": "Reports",
+    "noReports": "No reports available.",
+    "fetchError": "Failed to fetch reports."
+  },
+  "groups": {
+    "pageTitle": "Groups Overview",
+    "pageDescription": "Overview of groups.",
+    "pageHeading": "Groups",
+    "createButton": "Create Group",
+    "groupCodePlaceholder": "Enter Group Code",
+    "joinButton": "Join Group",
+    "noGroupsAvailable": "No groups available.",
+    "createModalTitle": "Create a New Group",
+    "error": {
+      "groupCodeEmpty": "Group code cannot be empty.",
+      "joinGroupFailed": "Failed to join group."
+    }
+  },
+  "chatPage": {
+    "title": "Group Chat",
+    "description": "Join the group chat to collaborate with your team.",
+    "error": {
+      "invalidGroupId": "Invalid or missing group ID. Please try again."
+    }
+  },
+  "userOverview": {
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "title": "User Overview",
+    "searchPlaceholder": "Search by username or email...",
+    "filterRoles": "Filter Roles",
+    "filterRolesTitle": "Filter Roles",
+    "student": "Student",
+    "lecturer": "Lecturer",
+    "admin": "Admin",
+    "apply": "Apply",
+    "close": "Close",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "username": "Username",
+    "loading": "Loading...",
+    "failedUpdate": "Failed to update role",
+    "warning": "Warning",
+    "roleChangeWarning": "You are about to change your own role to {{newRole}}. This might limit your access. Are you sure?",
+    "noUsersFound": "No users found matching the criteria."
+  },
+  "reportModal": {
+    "title": "Report Message",
+    "placeholder": "Enter your report description here...",
+    "characters": "characters",
+    "successMessage": "Report submitted successfully.",
+    "failureMessage": "Failed to submit the report. Please try again.",
+    "errorMessage": "An error occurred. Please try again.",
+    "cancel": "Cancel",
+    "submit": "Submit Report",
+    "submitting": "Submitting..."
+  },
+  "reportTable": {
+    "description": "Description",
+    "date": "Date",
+    "reportSender": "Report Sender",
+    "messageContent": "Message content",
+    "messageSender": "Message Sender",
+    "na": "N/A"
+  },
+  "groupTable": {
+    "name": "Name",
+    "description": "Description",
+    "code": "Code",
+    "edit": "Edit",
+    "updateFailed": "Failed to update group",
+    "unknownError": "An unknown error occurred"
+  },
+  "groupChat": {
+    "emptyMessageError": "Message content cannot be empty.",
+    "loadingGroupDetails": "Loading group details...",
+    "code": "Code",
+    "copy": "Copy",
+    "report": "Report",
+    "unknownUser": "Unknown User",
+    "invalidDate": "Invalid Date",
+    "typeMessage": "Type a message...",
+    "send": "Send",
+    "sending": "Sending..."
+  },
+  "createGroup": {
+    "groupName": "Group Name",
+    "groupDescription": "Group Description",
+    "enterGroupName": "Enter group name",
+    "enterGroupDescription": "Enter group description",
+    "nameDescriptionRequired": "Name and description are required.",
+    "failedToCreate": "Failed to create group",
+    "successMessage": "Group created successfully!",
+    "generalError": "An error occurred. Please try again.",
+    "creating": "Creating...",
+    "createGroupButton": "Create Group"
+  },
+  "editGroup": {
+    "editGroup": "Edit Group",
+    "groupName": "Group Name",
+    "groupDescription": "Group Description",
+    "regenerateCode": "Regenerate Code",
+    "updateGroup": "Update Group"
+  },
+  "unauthorizedAccess": {
+    "noAccess": "No Access",
+    "message": "You don't have access to this group. Please click the button below to go back to the group page.",
+    "groupOverview": "Group Overview"
+  }
+}

@@ -3,12 +3,14 @@ import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import GroupService from "@/services/GroupService";
 import EditGroupModal from "./UpdateGroup";
+import { useTranslation } from "next-i18next";
 
 type Props = {
   groups: Array<Group>;
 };
 
 const GroupOverviewTable: React.FC<Props> = ({ groups }) => {
+  const { t } = useTranslation();
   const router = useRouter();
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -16,7 +18,6 @@ const GroupOverviewTable: React.FC<Props> = ({ groups }) => {
     null
   );
 
-  // Fetch logged in user from localStorage
   useEffect(() => {
     const storedUser = localStorage.getItem("loggedInUser");
     if (storedUser) {
@@ -39,13 +40,14 @@ const GroupOverviewTable: React.FC<Props> = ({ groups }) => {
       <table className="min-w-full bg-white shadow-md rounded-lg">
         <thead>
           <tr className="bg-gray-100 text-gray-700">
-            <th className="px-4 py-2 text-left">Name</th>
-            <th className="px-4 py-2 text-left">Description</th>
-            <th className="px-4 py-2 text-left">Code</th>
-            {/* Conditionally render the Edit column if the user is admin or lecturer */}
+            <th className="px-4 py-2 text-left">{t("groupTable.name")}</th>
+            <th className="px-4 py-2 text-left">
+              {t("groupTable.description")}
+            </th>
+            <th className="px-4 py-2 text-left">{t("groupTable.code")}</th>
             {(loggedInUser?.role === "admin" ||
               loggedInUser?.role === "lecturer") && (
-              <th className="px-4 py-2 text-left">Edit</th>
+              <th className="px-4 py-2 text-left">{t("groupTable.edit")}</th>
             )}
           </tr>
         </thead>
@@ -59,7 +61,6 @@ const GroupOverviewTable: React.FC<Props> = ({ groups }) => {
               <td className="px-4 py-2 border-b">{group.name}</td>
               <td className="px-4 py-2 border-b">{group.description}</td>
               <td className="px-4 py-2 border-b">{group.code}</td>
-              {/* Conditionally render the Edit button */}
               {(loggedInUser?.role === "admin" ||
                 loggedInUser?.role === "lecturer") && (
                 <td className="px-4 py-2 border-b text-center">
@@ -72,7 +73,7 @@ const GroupOverviewTable: React.FC<Props> = ({ groups }) => {
                   >
                     <img
                       src="/pencil-edit-button.svg"
-                      alt="Edit Group"
+                      alt={t("groupTable.edit")}
                       className="w-5 h-5 transition-transform duration-200 ease-in-out hover:scale-110 hover:text-blue-500"
                     />
                   </button>
@@ -96,7 +97,7 @@ const GroupOverviewTable: React.FC<Props> = ({ groups }) => {
                 regenerateCode
               );
               if (!response.ok) {
-                throw new Error("Failed to update group");
+                throw new Error(t("groupTable.updateFailed"));
               }
 
               window.location.reload();
@@ -104,7 +105,7 @@ const GroupOverviewTable: React.FC<Props> = ({ groups }) => {
               if (error instanceof Error) {
                 alert(error.message);
               } else {
-                alert("An unknown error occurred");
+                alert(t("groupTable.unknownError"));
               }
             }
           }}

@@ -1,0 +1,200 @@
+{
+  "login": {
+    "title": "Gebruiker inloggen",
+    "labels": {
+      "username": "Gebruikersnaam",
+      "password": "Wachtwoord"
+    },
+    "placeholders": {
+      "username": "Voer uw gebruikersnaam in",
+      "password": "Voer uw wachtwoord in"
+    },
+    "buttons": {
+      "submit": "Inloggen"
+    },
+    "noAccount": "Nog geen account?",
+    "signupLink": "Meld je aan",
+    "success": "Inloggen geslaagd. Doorsturen naar de homepage...",
+    "errors": {
+      "nameRequired": "Naam is verplicht.",
+      "passwordRequired": "Wachtwoord is verplicht.",
+      "generalError": "Algemene fout. Probeer het later opnieuw."
+    }
+  },
+  "header": {
+    "logo": "CampusChat",
+    "admin": {
+      "userOverview": "Gebruikersoverzicht",
+      "reportOverview": "Rapportoverzicht"
+    },
+    "groups": "Groepen",
+    "guest": {
+      "signup": "Registreren",
+      "login": "Inloggen"
+    },
+    "logout": "Uitloggen"
+  },
+  "language": "Taal",
+  "signup": {
+    "title": "Registreren",
+    "fields": {
+      "username": "Gebruikersnaam",
+      "email": "E-mail",
+      "password": "Wachtwoord"
+    },
+    "placeholders": {
+      "username": "Voer uw gebruikersnaam in",
+      "email": "Voer uw e-mailadres in",
+      "password": "Voer uw wachtwoord in"
+    },
+    "errors": {
+      "nameRequired": "Naam is verplicht.",
+      "emailRequired": "E-mailadres is verplicht.",
+      "passwordRequired": "Wachtwoord is verplicht.",
+      "general": "Algemene fout. Probeer het later opnieuw."
+    },
+    "success": "Registratie geslaagd. Doorsturen naar inloggen...",
+    "submit": "Registreren",
+    "footer": {
+      "text": "Heb je al een account?",
+      "link": "Inloggen"
+    }
+  },
+  "unauthorized": {
+    "title": "Ongeautoriseerde Toegang",
+    "message": "U moet inloggen om deze pagina te bekijken. Klik op de knop hieronder om in te loggen."
+  },
+  "home": {
+    "meta": {
+      "description": "CampusChat startpagina."
+    },
+    "welcome": {
+      "title": "Welkom bij",
+      "subtitle": "Jouw platform voor naadloze communicatie, samenwerking en verbinding."
+    },
+    "brand": "CampusChat",
+    "banner": {
+      "alt": "CampusChat Banner"
+    },
+    "cta": {
+      "getStarted": "Aan de slag",
+      "exploreGroups": "Ontdek Groepen"
+    }
+  },
+  "users": {
+    "pageTitle": "Gebruikersoverzicht"
+  },
+  "reports": {
+    "pageTitle": "Rapportoverzicht",
+    "pageDescription": "Overzicht van rapporten.",
+    "pageHeading": "Rapporten",
+    "noReports": "Geen rapporten beschikbaar.",
+    "fetchError": "Mislukt bij het ophalen van rapporten."
+  },
+  "groups": {
+    "pageTitle": "Groepen Overzicht",
+    "pageDescription": "Overzicht van groepen.",
+    "pageHeading": "Groepen",
+    "createButton": "Maak Groep Aan",
+    "groupCodePlaceholder": "Voer Groepscode In",
+    "joinButton": "Word Lid Van Groep",
+    "noGroupsAvailable": "Geen groepen beschikbaar.",
+    "createModalTitle": "Maak Een Nieuwe Groep",
+    "error": {
+      "groupCodeEmpty": "Groepscode mag niet leeg zijn.",
+      "joinGroupFailed": "Mislukt bij het lid worden van de groep."
+    }
+  },
+  "chatPage": {
+    "title": "Groepschat",
+    "description": "Doe mee aan de groepschat om samen te werken met je team.",
+    "error": {
+      "invalidGroupId": "Ongeldige of ontbrekende groeps-ID. Probeer het opnieuw."
+    }
+  },
+  "userOverview": {
+    "name": "Naam",
+    "title": "Gebruikersoverzicht",
+    "searchPlaceholder": "Zoek op gebruikersnaam of e-mail...",
+    "filterRoles": "Filter Rollen",
+    "filterRolesTitle": "Filter Rollen",
+    "student": "Student",
+    "lecturer": "Docent",
+    "admin": "Beheerder",
+    "apply": "Toepassen",
+    "close": "Sluiten",
+    "cancel": "Annuleren",
+    "confirm": "Bevestigen",
+    "username": "Gebruikersnaam",
+    "email": "E-mail",
+    "role": "Rol",
+    "loading": "Laden...",
+    "failedUpdate": "Fout bij het bijwerken van de rol",
+    "warning": "Waarschuwing",
+    "roleChangeWarning": "Je staat op het punt je eigen rol te wijzigen naar {{newRole}}. Dit kan je toegang beperken. Weet je het zeker?",
+    "noUsersFound": "Geen gebruikers gevonden die aan de criteria voldoen."
+  },
+  "reportModal": {
+    "title": "Rapporteer Bericht",
+    "placeholder": "Voer hier uw rapportbeschrijving in...",
+    "characters": "tekens",
+    "successMessage": "Rapport succesvol ingediend.",
+    "failureMessage": "Rapport indienen mislukt. Probeer het opnieuw.",
+    "errorMessage": "Er is een fout opgetreden. Probeer het opnieuw.",
+    "cancel": "Annuleren",
+    "submit": "Rapport Indienen",
+    "submitting": "Bezig met indienen..."
+  },
+  "reportTable": {
+    "description": "Beschrijving",
+    "date": "Datum",
+    "reportSender": "Rapport Verzender",
+    "messageContent": "Berichtinhoud",
+    "messageSender": "Bericht Verzender",
+    "na": "N.V.T."
+  },
+  "groupTable": {
+    "name": "Naam",
+    "description": "Beschrijving",
+    "code": "Code",
+    "edit": "Bewerken",
+    "updateFailed": "Groep bijwerken mislukt",
+    "unknownError": "Er is een onbekende fout opgetreden"
+  },
+  "groupChat": {
+    "emptyMessageError": "Berichtinhoud mag niet leeg zijn.",
+    "loadingGroupDetails": "Groepsgegevens laden...",
+    "code": "Code",
+    "copy": "Kopiëren",
+    "report": "Rapporteer",
+    "unknownUser": "Onbekende Gebruiker",
+    "invalidDate": "Ongeldige Datum",
+    "typeMessage": "Typ een bericht...",
+    "send": "Verzenden",
+    "sending": "Bezig met verzenden..."
+  },
+  "createGroup": {
+    "groupName": "Groepsnaam",
+    "groupDescription": "Groepsbeschrijving",
+    "enterGroupName": "Voer groepsnaam in",
+    "enterGroupDescription": "Voer groepsbeschrijving in",
+    "nameDescriptionRequired": "Naam en beschrijving zijn verplicht.",
+    "failedToCreate": "Groep kon niet worden aangemaakt",
+    "successMessage": "Groep succesvol aangemaakt!",
+    "generalError": "Er is een fout opgetreden. Probeer het opnieuw.",
+    "creating": "Bezig met aanmaken...",
+    "createGroupButton": "Groep Aanmaken"
+  },
+  "editGroup": {
+    "editGroup": "Groep Bewerken",
+    "groupName": "Groepsnaam",
+    "groupDescription": "Groepsbeschrijving",
+    "regenerateCode": "Code Regenereren",
+    "updateGroup": "Groep Bijwerken"
+  },
+  "unauthorizedAccess": {
+    "noAccess": "Geen Toegang",
+    "message": "Je hebt geen toegang tot deze groep. Klik op de knop hieronder om terug te gaan naar de groepspagina.",
+    "groupOverview": "Groepsoverzicht"
+  }
+}

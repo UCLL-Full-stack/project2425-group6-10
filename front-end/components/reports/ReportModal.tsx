@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import ReportService from "@/services/ReportService";
+import { useTranslation } from "next-i18next";
 
 type ReportModalProps = {
   messageId: number;
@@ -7,6 +8,7 @@ type ReportModalProps = {
 };
 
 const ReportModal: React.FC<ReportModalProps> = ({ messageId, onClose }) => {
+  const { t } = useTranslation();
   const [description, setDescription] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -17,13 +19,13 @@ const ReportModal: React.FC<ReportModalProps> = ({ messageId, onClose }) => {
     try {
       const response = await ReportService.createReport(messageId, description);
       if (response.ok) {
-        alert("Report submitted successfully.");
+        alert(t("reportModal.successMessage"));
         onClose();
       } else {
-        setError("Failed to submit the report. Please try again.");
+        setError(t("reportModal.failureMessage"));
       }
     } catch (error) {
-      setError("An error occurred. Please try again.");
+      setError(t("reportModal.errorMessage"));
       console.error(error);
     } finally {
       setIsSubmitting(false);
@@ -33,17 +35,17 @@ const ReportModal: React.FC<ReportModalProps> = ({ messageId, onClose }) => {
   return (
     <div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50 z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-        <h2 className="text-xl font-semibold mb-4">Report Message</h2>
+        <h2 className="text-xl font-semibold mb-4">{t("reportModal.title")}</h2>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={4}
-          maxLength={200} // Limit input to 200 characters
-          className="w-full p-2 border rounded-lg mb-4 resize-none" // `resize-none` disables resizing
-          placeholder="Enter your report description here..."
+          maxLength={200}
+          className="w-full p-2 border rounded-lg mb-4 resize-none"
+          placeholder={t("reportModal.placeholder")}
         />
         <div className="text-sm text-gray-500">
-          {description.length}/200 characters
+          {description.length}/200 {t("reportModal.characters")}
         </div>
         {error && <p className="text-red-500 text-sm">{error}</p>}
         <div className="flex justify-end space-x-4">
@@ -51,7 +53,7 @@ const ReportModal: React.FC<ReportModalProps> = ({ messageId, onClose }) => {
             onClick={onClose}
             className="bg-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300"
           >
-            Cancel
+            {t("reportModal.cancel")}
           </button>
           <button
             onClick={handleReportSubmit}
@@ -62,7 +64,9 @@ const ReportModal: React.FC<ReportModalProps> = ({ messageId, onClose }) => {
                 : "bg-indigo-600 hover:bg-indigo-700"
             } text-white px-4 py-2 rounded-lg`}
           >
-            {isSubmitting ? "Submitting..." : "Submit Report"}
+            {isSubmitting
+              ? t("reportModal.submitting")
+              : t("reportModal.submit")}
           </button>
         </div>
       </div>

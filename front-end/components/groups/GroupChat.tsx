@@ -5,12 +5,14 @@ import UnauthorizedAccess from "@/components/users/UnauthorizedAccess";
 import NoAccess from "@/components/groups/NoAccess";
 import MessageService from "@/services/MessageService";
 import ReportModal from "../reports/ReportModal";
+import { useTranslation } from "next-i18next"; // Import the translation hook
 
 type Props = {
   groupId: number;
 };
 
 const GroupChat: React.FC<Props> = ({ groupId }) => {
+  const { t } = useTranslation(); // Hook to access translations
   const [group, setGroup] = useState<Group | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
@@ -52,7 +54,7 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
       } else if (response.ok) {
         const newMessages = await response.json();
 
-        // Use functional state update to ensure the latest `messages` state // TO FIX SCROLLTOBOTOM ON EVERY SECOND BECAUSE OF POLLING
+        // Use functional state update to ensure the latest `messages` state
         setMessages((prevMessages) => {
           if (
             newMessages.length !== prevMessages.length ||
@@ -61,10 +63,8 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
                 msg.id === prevMessages[index]?.id
             )
           ) {
-            //console.log("Messages updated:", newMessages);
             return newMessages;
           }
-          //console.log("Messages unchanged.");
           return prevMessages;
         });
       }
@@ -79,7 +79,7 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
 
   const handleSendMessage = async () => {
     if (newMessage.trim() === "") {
-      alert("Message content cannot be empty.");
+      alert(t("groupChat.emptyMessageError"));
       return;
     }
     if (isSending) return;
@@ -116,6 +116,7 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
       handleSendMessage();
     }
   };
+
   const openReportModal = (messageId: number) => {
     setSelectedMessageId(messageId);
     setShowReportModal(true);
@@ -132,14 +133,12 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
       setLoggedInUser(JSON.parse(storedUser));
     }
 
-    // Initial fetch
     fetchGroupDetails();
     fetchMessages();
 
-    // Polling
     const interval = setInterval(fetchMessages, 1000);
 
-    return () => clearInterval(interval); // Cleanup
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -154,7 +153,7 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
     return <NoAccess />;
   }
 
-  if (!group) return <p>Loading group details...</p>;
+  if (!group) return <p>{t("groupChat.loadingGroupDetails")}</p>;
 
   return (
     <div className="flex flex-col h-full bg-gray-50 shadow-lg rounded-lg">
@@ -163,12 +162,14 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
         <h1 className="text-3xl font-bold">{group.name}</h1>
         <p className="mt-2 text-sm">{group.description}</p>
         <div className="mt-4 flex items-center space-x-2">
-          <span className="text-sm font-medium">Code: {group.code}</span>
+          <span className="text-sm font-medium">
+            {t("groupChat.code")}: {group.code}
+          </span>
           <button
             className="bg-white text-indigo-600 px-3 py-1 rounded-md shadow hover:bg-indigo-100"
             onClick={() => navigator.clipboard.writeText(group.code)}
           >
-            Copy
+            {t("groupChat.copy")}
           </button>
         </div>
       </div>
@@ -196,12 +197,12 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
                   }
                   className="absolute top-2 right-2 text-indigo-600 hover:text-indigo-800"
                 >
-                  Report
+                  {t("groupChat.report")}
                 </button>
               )}
 
               <p className="text-sm font-semibold">
-                {message.user?.username || "Unknown User"}
+                {message.user?.username || t("groupChat.unknownUser")}
               </p>
               <p className="mt-1 break-words whitespace-pre-wrap">
                 {message.content}
@@ -212,7 +213,7 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
                 </span>
               ) : (
                 <span className="text-xs text-gray-500 block text-right">
-                  Invalid Date
+                  {t("groupChat.invalidDate")}
                 </span>
               )}
             </div>
@@ -227,7 +228,7 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
           type="text"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Type a message..."
+          placeholder={t("groupChat.typeMessage")}
           className="flex-1 px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           onKeyDown={handleKeyPress}
         />
@@ -238,7 +239,7 @@ const GroupChat: React.FC<Props> = ({ groupId }) => {
           } text-white px-4 py-2 rounded-lg shadow`}
           disabled={isSending}
         >
-          {isSending ? "Sending..." : "Send"}
+          {isSending ? t("groupChat.sending") : t("groupChat.send")}
         </button>
       </div>
       {showReportModal && selectedMessageId && (

@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import GroupService from "../../services/GroupService";
+import { useTranslation } from "next-i18next";
 
 interface CreateGroupProps {
   onClose: () => void;
 }
 
 const CreateGroup: React.FC<CreateGroupProps> = ({ onClose }) => {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,7 +21,7 @@ const CreateGroup: React.FC<CreateGroupProps> = ({ onClose }) => {
     setSuccessMessage(null);
 
     if (!name.trim() || !description.trim()) {
-      setError("Name and description are required.");
+      setError(t("createGroup.nameDescriptionRequired"));
       setLoading(false);
       return;
     }
@@ -29,21 +31,20 @@ const CreateGroup: React.FC<CreateGroupProps> = ({ onClose }) => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to create group");
+        throw new Error(errorData.message || t("createGroup.failedToCreate"));
       }
 
-      setSuccessMessage("Group created successfully!");
+      setSuccessMessage(t("createGroup.successMessage"));
       setName("");
       setDescription("");
 
-      // Close the modal and refresh the page after a successful creation
       onClose();
-      window.location.reload(); // Refresh the page
+      window.location.reload();
     } catch (err) {
       if (err instanceof Error) {
-        setError(err.message || "An error occurred. Please try again.");
+        setError(err.message || t("createGroup.generalError"));
       } else {
-        setError("An error occurred. Please try again.");
+        setError(t("createGroup.generalError"));
       }
     } finally {
       setLoading(false);
@@ -57,14 +58,14 @@ const CreateGroup: React.FC<CreateGroupProps> = ({ onClose }) => {
           htmlFor="name"
           className="block text-sm font-medium text-gray-700"
         >
-          Group Name
+          {t("createGroup.groupName")}
         </label>
         <input
           type="text"
           id="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Enter group name"
+          placeholder={t("createGroup.enterGroupName")}
           className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
           required
         />
@@ -74,17 +75,17 @@ const CreateGroup: React.FC<CreateGroupProps> = ({ onClose }) => {
           htmlFor="description"
           className="block text-sm font-medium text-gray-700"
         >
-          Group Description
+          {t("createGroup.groupDescription")}
         </label>
         <textarea
           id="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="Enter group description"
+          placeholder={t("createGroup.enterGroupDescription")}
           className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
           required
-          maxLength={80} // Maximaal aantal tekens
-          style={{ resize: "none" }} // Voorkom handmatig uitrekken
+          maxLength={80}
+          style={{ resize: "none" }}
         ></textarea>
       </div>
       {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
@@ -100,7 +101,9 @@ const CreateGroup: React.FC<CreateGroupProps> = ({ onClose }) => {
             : "bg-blue-500 hover:bg-blue-600"
         }`}
       >
-        {loading ? "Creating..." : "Create Group"}
+        {loading
+          ? t("createGroup.creating")
+          : t("createGroup.createGroupButton")}{" "}
       </button>
     </form>
   );

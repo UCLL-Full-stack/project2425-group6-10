@@ -5,8 +5,11 @@ import ReportTable from "../../components/reports/ReportOverviewTable";
 import UnauthorizedAccess from "@/components/users/UnauthorizedAccess";
 import Header from "@/components/header";
 import Head from "next/head";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const ReportsPage: React.FC = () => {
+  const { t } = useTranslation();
   const [reports, setReports] = useState<Report[]>([]);
   const [isUnauthorized, setIsUnauthorized] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -15,7 +18,6 @@ const ReportsPage: React.FC = () => {
     role: string;
   } | null>(null);
 
-  // Fetch reports data
   const fetchReports = async () => {
     try {
       const response = await ReportService.getAllReports();
@@ -26,7 +28,7 @@ const ReportsPage: React.FC = () => {
         setReports(json);
       }
     } catch (error) {
-      setErrorMessage("Failed to fetch reports.");
+      setErrorMessage(t("reports.fetchError"));
     }
   };
 
@@ -42,8 +44,8 @@ const ReportsPage: React.FC = () => {
   return (
     <>
       <Head>
-        <title>Reports</title>
-        <meta name="description" content="Overview of reports." />
+        <title>{t("reports.pageTitle")}</title>
+        <meta name="description" content={t("reports.pageDescription")} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -53,31 +55,37 @@ const ReportsPage: React.FC = () => {
           isUnauthorized ? "opacity-50" : "opacity-100"
         }`}
       >
-        {/* Render heading for reports */}
-        <h1 className="text-3xl font-bold mb-6">Reports</h1>
+        <h1 className="text-3xl font-bold mb-6">{t("reports.pageHeading")}</h1>
 
-        {/* Unauthorized Access */}
         {isUnauthorized && <UnauthorizedAccess />}
 
-        {/* Error Message */}
         {errorMessage && (
           <div className="flex items-center gap-2 bg-red-100 border border-red-500 text-red-700 p-3 rounded mb-4">
             <span>{errorMessage}</span>
           </div>
         )}
 
-        {/* Report Overview Table */}
         {reports.length > 0 ? (
           <ReportTable
             reports={reports}
             loggedInUserRole={loggedInUser?.role || null}
           />
         ) : (
-          <p className="text-gray-600">No reports available.</p>
+          <p className="text-gray-600">{t("reports.noReports")}</p>
         )}
       </main>
     </>
   );
+};
+
+export const getServerSideProps = async (context: { locale: any }) => {
+  const { locale } = context;
+
+  return {
+    props: {
+      ...(await serverSideTranslations(locale ?? "en", ["common", "reports"])),
+    },
+  };
 };
 
 export default ReportsPage;
