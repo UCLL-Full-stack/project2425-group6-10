@@ -17,8 +17,15 @@ const Header: React.FC = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("loggedInUser");
-    setLoggedInUser(null);
 
+    // Clear all draft messages
+    Object.keys(localStorage).forEach((key) => {
+      if (key.startsWith("draftMessage_group_")) {
+        localStorage.removeItem(key);
+      }
+    });
+
+    setLoggedInUser(null);
     window.location.reload();
   };
 
