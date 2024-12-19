@@ -247,6 +247,42 @@ userRouter.post('/login', async (req: Request, res: Response, next: NextFunction
     }
 });
 
+/**
+ * @swagger
+ * /users/{username}/role:
+ *  put:
+ *      security:
+ *      - bearerAuth: []
+ *      summary: Update a user's role
+ *      parameters:
+ *          - in: path
+ *            name: username
+ *            required: true
+ *            description: Username of the user
+ *            schema:
+ *              type: string
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          newRole:
+ *                              type: string
+ *                              description: New role for the user
+ *      responses:
+ *          200:
+ *              description: Updated user object
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/User'
+ *          400:
+ *              description: Invalid username or role
+ *          404:
+ *              description: User not found
+ */
 userRouter.put('/:username/role', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const request = req as Request & { auth: { username: string; role: Role } };
