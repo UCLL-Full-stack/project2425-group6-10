@@ -159,7 +159,11 @@
     "code": "Code",
     "edit": "Bewerken",
     "updateFailed": "Groep bijwerken mislukt",
-    "unknownError": "Er is een onbekende fout opgetreden"
+    "unknownError": "Er is een onbekende fout opgetreden",
+    "confirmDelete": "Weet je zeker dat je de groep {{groupName}} wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
+    "delete": "Verwijderen",
+    "deleteFailed": "Groep verwijderen mislukt",
+    "deleteConfirm": "Bevestig Verwijderen"
   },
   "groupChat": {
     "emptyMessageError": "Berichtinhoud mag niet leeg zijn.",

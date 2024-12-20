@@ -159,7 +159,11 @@
     "code": "Code",
     "edit": "Edit",
     "updateFailed": "Failed to update group",
-    "unknownError": "An unknown error occurred"
+    "unknownError": "An unknown error occurred",
+    "confirmDelete": "Are you sure you want to delete the group {{groupName}}? This action cannot be undone.",
+    "delete": "Delete",
+    "deleteFailed": "Failed to delete group",
+    "deleteConfirm": "Confirm Delete"
   },
   "groupChat": {
     "emptyMessageError": "Message content cannot be empty.",

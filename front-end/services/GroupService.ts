@@ -80,12 +80,26 @@ const updateGroup = async (
   });
 };
 
+const deleteGroup = async (groupId: number) => {
+  const storedUser = localStorage.getItem("loggedInUser");
+  const token = storedUser ? JSON.parse(storedUser).token : null;
+
+  return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/groups/${groupId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 const GroupService = {
   getAllGroups,
   getGroupById,
   getMessagesByGroupId,
   createGroup,
   updateGroup,
+  deleteGroup,
 };
 
 export default GroupService;
