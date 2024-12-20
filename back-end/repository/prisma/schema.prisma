@@ -19,31 +19,31 @@ model User {
 }
 
 model Message {
-  id      Int       @id @default(autoincrement())
+  id      Int      @id @default(autoincrement())
   content String
-  date    String    @default(dbgenerated("CURRENT_TIMESTAMP"))
+  date    String   @default(dbgenerated("CURRENT_TIMESTAMP"))
   groupId Int
-  group   Group?    @relation("GroupToMessage", fields: [groupId], references: [id])
+  group   Group?   @relation("GroupToMessage", fields: [groupId], references: [id], onDelete: Cascade)
   userId  Int
-  user    User?     @relation("UserToMessage", fields: [userId], references: [id])
-  reports Report[]  @relation("MessageToReport") // One-to-many relationship with reports
+  user    User?    @relation("UserToMessage", fields: [userId], references: [id])
+  reports Report[] @relation("MessageToReport") // One-to-many relationship with reports
 }
 
 model Report {
-  id          Int       @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   description String
-  date        String    @default(dbgenerated("CURRENT_TIMESTAMP"))
+  date        String  @default(dbgenerated("CURRENT_TIMESTAMP"))
   userId      Int
-  user        User      @relation("UserToReport", fields: [userId], references: [id]) // Links to the reporting user
+  user        User    @relation("UserToReport", fields: [userId], references: [id]) // Links to the reporting user
   messageId   Int
-  message     Message   @relation("MessageToReport", fields: [messageId], references: [id]) // Links to the reported message
+  message     Message @relation("MessageToReport", fields: [messageId], references: [id], onDelete: Cascade) // Links to the reported message
 }
 
 model Group {
   id          Int       @id @default(autoincrement())
   name        String
   description String
-  code        String    @default(uuid()) @unique
+  code        String    @unique @default(uuid())
   users       User[]    @relation("GroupToUser")
   messages    Message[] @relation("GroupToMessage")
 }
