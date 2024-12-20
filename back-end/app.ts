@@ -9,11 +9,12 @@ import { messageRouter } from './controller/message.routes';
 import { reportRouter } from './controller/report.routes';
 import { groupRouter } from './controller/group.routes';
 import { expressjwt } from 'express-jwt';
+import helmet from 'helmet';
 
 const app = express();
 dotenv.config();
 const port = process.env.APP_PORT || 3000;
-
+app.use(helmet());
 app.use(cors());
 app.use(bodyParser.json());
 
