@@ -160,6 +160,17 @@ const updateGroup = async (groupId: number, group: Group, code: string): Promise
     }
 };
 
+const deleteGroup = async (groupId: number): Promise<void> => {
+    try {
+        await database.group.delete({
+            where: { id: groupId },
+        });
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
+
 export default {
     getAllGroups,
     getGroupById,
@@ -167,4 +178,5 @@ export default {
     getGroupByCode,
     createGroup,
     updateGroup,
+    deleteGroup,
 };

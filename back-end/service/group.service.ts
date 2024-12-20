@@ -94,4 +94,19 @@ const updateGroup = async (
     return await groupDb.updateGroup(groupId, group, code);
 };
 
-export default { getGroups, getGroupById, createGroup, updateGroup };
+const deleteGroup = async (role: Role, groupId: number): Promise<void> => {
+    if (role !== 'admin' && role !== 'lecturer') {
+        throw new UnauthorizedError('credentials_required', {
+            message: 'You are not authorized to access this resource.',
+        });
+    }
+
+    const group = await groupDb.getGroupById(groupId);
+    if (!group) {
+        throw new Error('Group not found');
+    }
+
+    await groupDb.deleteGroup(groupId);
+};
+
+export default { getGroups, getGroupById, createGroup, updateGroup, deleteGroup };

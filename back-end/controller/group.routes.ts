@@ -226,4 +226,22 @@ groupRouter.put('/:groupId', async (req: Request, res: Response, next: NextFunct
     }
 });
 
+groupRouter.delete('/:groupId', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const groupId = parseInt(req.params.groupId, 10);
+
+        if (isNaN(groupId)) {
+            return res.status(400).json({ error: 'Invalid group ID' });
+        }
+
+        const request = req as Request & { auth: { role: Role } };
+        const { role } = request.auth;
+
+        await groupService.deleteGroup(role, groupId);
+        res.status(204).send();
+    } catch (error) {
+        next(error);
+    }
+});
+
 export { groupRouter };
