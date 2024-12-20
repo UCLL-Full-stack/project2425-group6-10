@@ -4,6 +4,13 @@ import Header from "@/components/header";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
+const predefinedUsers = [
+  { username: "admin", password: "admin123", role: "admin" },
+  { username: "JohnDoe", password: "JohnD123", role: "student" },
+  { username: "JaneDoe", password: "JaneD123", role: "student" },
+  { username: "JackDOE", password: "JackD123", role: "lecturer" },
+];
+
 export default function Home() {
   const { t } = useTranslation();
 
@@ -52,6 +59,28 @@ export default function Home() {
               {t("home.cta.exploreGroups")}
             </a>
           </div>
+        </section>
+        {/* Predefined Users*/}
+        <section className="p-6">
+          <h2 className="text-2xl font-bold mb-4">Predefined Users</h2>
+          <table className="min-w-full bg-white border border-gray-200">
+            <thead>
+              <tr>
+                <th className="border px-4 py-2 text-left">Username</th>
+                <th className="border px-4 py-2 text-left">Password</th>
+                <th className="border px-4 py-2 text-left">Role</th>
+              </tr>
+            </thead>
+            <tbody>
+              {predefinedUsers.map((user, index) => (
+                <tr key={index}>
+                  <td className="border px-4 py-2">{user.username}</td>
+                  <td className="border px-4 py-2">{user.password}</td>
+                  <td className="border px-4 py-2">{user.role}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </section>
       </main>
     </>
