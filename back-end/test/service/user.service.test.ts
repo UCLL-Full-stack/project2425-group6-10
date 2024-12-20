@@ -326,7 +326,7 @@ test('given: no existing username, when: authenticating, then: error is thrown',
     userDb.getUserbyUsername = mockGetUserByUsername;
 
     await expect(userService.authenticate({ username, password })).rejects.toThrow(
-        'User not found'
+        'username or password is incorrect.'
     );
 
     expect(mockGetUserByUsername).toHaveBeenCalledTimes(1);
@@ -351,7 +351,7 @@ test('given: incorrect password, when: authenticating, then: error is thrown', a
     bcrypt.compare = mockComparePassword;
 
     await expect(userService.authenticate({ username, password })).rejects.toThrow(
-        'Incorrect password.'
+        'username or password is incorrect.'
     );
 
     expect(mockGetUserByUsername).toHaveBeenCalledTimes(1);

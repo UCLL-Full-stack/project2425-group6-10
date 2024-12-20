@@ -85,13 +85,13 @@ const authenticate = async ({ username, password }: UserInput): Promise<Authenti
     }
     const user = await userDb.getUserbyUsername(username);
     if (!user) {
-        throw new Error('User not found');
+        throw new Error('username or password is incorrect.');
     }
 
     const isValidPassword = await bcrypt.compare(password, user.getPassword());
 
     if (!isValidPassword) {
-        throw new Error('Incorrect password.');
+        throw new Error('username or password is incorrect.');
     }
     return {
         token: generateJwtToken({ username, role: user.getRole() }),
